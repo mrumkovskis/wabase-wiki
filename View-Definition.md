@@ -28,18 +28,41 @@ Firstly, we define the name of the view `bank_list_row`.  Next up, we set the so
 view `id`, `code`, `country_code` and `name` are defined. Finally, we define preferred order of the view, which is by 
 the `id`. When requested with `list` API, the returned JSON would look something like this
 
+
 **#TODO** add example and ask if it's possible to see the responses from tests myself.
+
 > 1: {id: 1, code: "LVHABA-1", country_code: 1, name: "Swedbank"}
 > 
 > 
 > 
 > 
 > 
-> 
+>
+
+## Field options
+
+As we've just seen fields of the view are defined under the `fields` section of a yaml block for a single view. Now 
+let's take a look at different settings we can set for every field/
+
+### type
+
+### length
+
+### optional
+
+### basic tresql
+
+
+
+
+
+
+
 
 ## Nested view
+**#TODO** Nested, multilayer - what's the correct term
 
-
+Now let's take a look on how to define a nested view - there is an example below. 
 
 ```
 name: bank_with_account
@@ -54,4 +77,28 @@ fields:
     - id
     - billing_account
     - last_modified
+```
+
+As you can see, in order to do this you  define a new field followed by colon `:` and then follow the regular view 
+definition with a one tab indent. Thus nested view follows the same definition syntax. Of course, you can also 
+define third and fourth layers in the same manner, with each next layer having one more tab indent.
+
+## Joins
+**#TODO** Nested vs joins. How view depends on API.
+
+While the regular nested views are usually used for put api
+
+```
+name: table_alias_test_bank_1
+table: bank bk
+joins:
+- bk / country cr
+  save-to:
+- bank
+- country
+  fields:
+- id
+- code    -> bank.code    = _
+- bk.name -> bank.name    = _
+- cr.name -> country.name = _
 ```
