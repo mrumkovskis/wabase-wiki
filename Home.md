@@ -9,6 +9,6 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
 
 ### Table of Contents
 * Tables
-* [View Definition](View-Definition.md)
+* [View Definition](View-Intro.md)
 * [Table Definition](Table-Definition.md)
 * 

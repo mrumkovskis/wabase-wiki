@@ -20,7 +20,6 @@ fields:
 - code
 - country_code
 - name
-  order: ~id
 ```
 
 In this definition we can see a view which gives some basic information about a bank.
@@ -29,7 +28,8 @@ view `id`, `code`, `country_code` and `name` are defined. Finally, we define pre
 the `id`. When requested with `list` API, the returned JSON would look something like this
 
 
-**#TODO** add example and ask if it's possible to see the responses from tests myself.
+**#TODO** add example and ask if it's possible to see the responses from tests myself. Maybe a test project with 
+basic back-end to play with.
 
 > 1: {id: 1, code: "LVHABA-1", country_code: 1, name: "Swedbank"}
 > 
@@ -62,24 +62,25 @@ fields:
   order: ~id
 ```
 
-**#TODO** ask what other options are there
 
 ### type
 
 Some 
 
+**#TODO** conventions?
+
 
 ### length
 
-
-
-**#TODO** are there any other field options?
-
-
-
-
-
-
+**#TODO** ask what other options are there
+1. [?]
+2. [+]
+3. [!]
+4. =
+5. smth || ' ' || smth
+6. = ^smth ->
+7. person.yaml
+8. coalesce
 
 
 ## Nested view
@@ -242,8 +243,17 @@ fields:
     - balance [!]
 
 ```
+## Filter
 
-## API
+## Order
+
+## Comments
 
 
-## Validations
+
+
+
+
+
+
+
