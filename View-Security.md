@@ -1,5 +1,0 @@
-## API
-
-## Validations
-
-## Authentication
