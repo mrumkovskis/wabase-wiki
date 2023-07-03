@@ -1,41 +1,4 @@
-## Field options
 
-
-
-We've just seen that fields of the view are defined under the `fields:` section of a view. Now let's take a look at
-different settings we can set for individual fields.
-
-
-### Optional and Compulsory fields
-
-By default, all the fields of a view are optional. In order to make a field compulsory just add `!` after the name
-of the field.
-
-```
-name: bank_list_row
-extends
-api:
-table: bank
-fields:
-- id    !               # Not null
-- code  int             # type
-- country_code  50      # length          
-- name                  #TODO ask Ozols!
-  
-```
-
-
-### type
-
-Some
-
-**#TODO** conventions?
-
-check mojoz/src/main/scala/MdConventions.scala
-
-### length
-
-**#TODO** ask what other options are there
 
 [] - tresql/core/src/main/scala/org/tresql /ORT.scala
 SaveOptions(876) and Property(848)
