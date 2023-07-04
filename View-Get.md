@@ -1,3 +1,23 @@
+# Views for GET 
+
+Depening on our 
+## get addS
+
+filter, = and join, key
+
+## list adds
+
+filter order group limit, join, =
+
+## count adds
+
+filter group limit (order, field, = don't do anything), join
+
+
+
+
+# DELETE
+key
 
 
 As you can see, in order to do this you  define a new field followed by colon `:` and then follow the regular view

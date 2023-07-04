@@ -11,6 +11,6 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
 * [Home](Home.md)
 * [View Definition](View-Intro.md)
   * [Intro](View-Intro.md)
-  * [View for get, list and count APIs](View-GetListCount.md)
+  * [View for get, list and count APIs](View-Get.md)
   * [View for insert and update APIs](View-InsertUpdate.md)
 * [Table Definition](Table-Definition.md)

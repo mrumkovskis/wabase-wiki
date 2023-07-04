@@ -10,7 +10,7 @@ different kinds of requests.
 * [Home](Home.md)
 * [View Definition](View-Intro.md)
     * [Intro](View-Intro.md)
-    * [View for get, list and count APIs](View-GetListCount.md)
+    * [View for get, list and count APIs](View-Get.md)
     * [View for insert and update APIs](View-InsertUpdate.md)
 * [Table Definition](Table-Definition.md)
 
@@ -25,7 +25,6 @@ Now let's take a look at how generic view looks.
 
 ```
 name: user
-comment: This view gives primary information about user data.
 table: users
 fields:
 - id:
@@ -34,68 +33,40 @@ fields:
 - surname
 - sex
 - date_of_birth
+comment: This view gives primary information about user data.
 ```
 
-### Primary fields
-There are **4 primary settings for every view** and those should be defined in this exact order. 
+Even without any prior knowledge about wabase, this view should be pretty self-explanatory. It defines a view named 
+`user` that reads/writes to fields `id`, `name`, `surname`, `sex` and `date_of_birth` which are fields of table 
+names `users`. 
+
+## Primary fields
+There are **3 primary settings for every view** - `name`, `table` and `fields`. These three fields are compulsory 
+and should be defined in the order shown above. 
 
 The first setting for every view is `name`. This setting defines the name of the view, and therefore it's compulsory 
-and is unique for every view. 
+and unique for every view. 
 
-The next setting is `comment`. This is the only arbitrary setting of the four basic settings, however we 
-strongly encourage you to use it. This setting's whole purpose is for you to describe who this exact view is for.
+The other two settings are `table` and `fields`. These two settings define the table and the fields of the table 
+which data will be read-from/written-to. These two fields are also compulsory, since otherwise a view simply won't 
+have any logical purpose.
 
-The third and the fourth settings are `table` and `fields`. These two settings define the table and the fields of the 
-table which data will be saved to, read from or deleted from. These two fields are also compulsory, since otherwise 
-a view simply won't have any logical purpose.
-
-### Field settings
-We've just seen that fields of the view are defined under the `fields:` section of a view. Now let's take a look at 
-different settings we can set for individual fields.
+One more primary setting for every view is `comment`. This is the only arbitrary setting of the four basic settings, 
+however we strongly encourage you to use it. This setting's whole purpose is for you to describe who this exact view 
+is for. It can be placed in the very end as shown in the **Simple View** section above, or it can be placed right after 
+the `name` setting.
 
 
-```
-name: user
-comment: This view gives primary information about user data.
-table: users
-fields:
-- id                !       #not null
-- name              15      #length
-- surname           15      #length
-- age               int     #type
-- sex       
+## View for different HTTPs methods
 
-```
-
-
-### Not Null
-
-### Length
-
-### Type
-
-**#TODO** conventions?
-
-check mojoz/src/main/scala/MdConventions.scala
-
-### Other
-
-**#TODO** ask what other options are there
-
-
+Now you are equipped with the most basic knowledge about defining a view with wabase, so now it's about time to test 
+it out. Let's use the very same `user` view we defined above and see what we can do just with this view.
 
 > 1: {id: 1, code: "LVHABA-1", country_code: 1, name: "Swedbank"}
-> 
-> 
-> 
-> 
-> 
 >
-
-
-
-
-
-
-
+>
+>
+>
+>
+>
 
