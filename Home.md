@@ -6,6 +6,7 @@ On this page, you can find the documentation for wabase. Please note that the cu
 Therefore, it might not have some key concepts/ideas. If you have any questions - do not hesitate to post those
 in the [Issues section](https://github.com/mrumkovskis/wabase/issues). 
 
+---
 
 ## Table of Contents
 * [Home](Home.md)
@@ -14,3 +15,13 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * [View for get, list and count APIs](View-Get.md)
   * [View for insert and update APIs](View-InsertUpdate.md)
 * [Table Definition](Table-Definition.md)
+
+---
+
+## Setting up the environment
+
+Before we start off with wabase, lets set up the test environment, so that you could try the features yourself as 
+you go. We are going to use swagger to send different HTTP requests to a local wabase server and see what the 
+response is. 
+
+**#TODO:** set up the test environment and write a guide

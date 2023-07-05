@@ -1,5 +1,9 @@
 # Views for GET 
 
+Now look and features specific for the GET method. 
+
+**#TODO**: ask about how APIs and HTTP methods are connected
+
 Depening on our 
 ## get addS
 

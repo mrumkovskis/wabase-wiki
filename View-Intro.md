@@ -10,7 +10,7 @@ different kinds of requests.
 * [Home](Home.md)
 * [View Definition](View-Intro.md)
     * [Intro](View-Intro.md)
-    * [View for get, list and count APIs](View-Get.md)
+    * [View for GET](View-Get.md)
     * [View for insert and update APIs](View-InsertUpdate.md)
 * [Table Definition](Table-Definition.md)
 
@@ -59,8 +59,9 @@ the `name` setting.
 
 ## View for different HTTPs methods
 
-Now you are equipped with the most basic knowledge about defining a view with wabase, so now it's about time to test 
-it out. Let's use the very same `user` view we defined above and see what we can do just with this view.
+Now you are equipped with the most basic knowledge about defining a view with wabase, so it's about time to test 
+it out. Let's use the very same `user` view we defined above and see what we can do just with this view and 
+different HTTPs methods. However, before we begin, we should set up our test environment.
 
 > 1: {id: 1, code: "LVHABA-1", country_code: 1, name: "Swedbank"}
 >
