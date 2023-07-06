@@ -1,27 +1,52 @@
 # Views for GET 
 
-Now look and features specific for the GET method. 
+In this section we are going to discuss GET method specifically and what features does it have. The features 
+discussed in this chapter are unique for this method. However, before we do that, we are going to see how HTTP GET 
+method is matched with Wabase's inner APIs. First of all,
 
 **#TODO**: ask about how APIs and HTTP methods are connected
 
-Depening on our 
-## get addS
 
-filter, = and join, key
+Thus depending your needs
 
-## list adds
+---
 
-filter order group limit, join, =
+## Get a list
 
-## count adds
+Usually the most common one to use is the regular get method, which
+
+### Setting filters
+
+Starting 
+
+
+### =
+
+### 1. join
+
+### 2. order
+
+### 3. group
+
+### 4. limit
+
+## Get a record
+
+
+### 1. filter
+
+### 2. =
+
+### 3. join
+
+### 4. key
+
+
+
+
+## Get a count
 
 filter group limit (order, field, = don't do anything), join
-
-
-
-
-# DELETE
-key
 
 
 As you can see, in order to do this you  define a new field followed by colon `:` and then follow the regular view
