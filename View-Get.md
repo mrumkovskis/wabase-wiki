@@ -2,23 +2,72 @@
 
 In this section we are going to discuss GET method specifically and what features does it have. The features 
 discussed in this chapter are unique for this method. However, before we do that, we are going to see how HTTP GET 
-method is matched with Wabase's inner APIs. First of all,
+method is matched with Wabase's inner APIs and how we implement these feature to achieve our goals.
+
+---
+
+## Table of Contents
+* [Home](Home.md)
+* [View Definition](View-Intro.md)
+    * [Intro](View-Intro.md)
+    * [View for GET](View-Get.md)
+    * [View for insert and update APIs](View-InsertUpdate.md)
+* [Table Definition](Table-Definition.md)
+
+---
+
+## HTTP methods and Wabase API
+First of all,
 
 **#TODO**: ask about how APIs and HTTP methods are connected
 
 
-Thus depending your needs
+Thus depending on your needs you are going to use the according combination of HTTP method and URL.
 
----
 
-## Get a list
 
-Usually the most common one to use is the regular get method, which
+## Get matched with `list` API
+
+This is the most common type of requests. We use list API whenever we need to get a list of items. Let's get back to 
+our very first example from the View-Intro. 
+
+```
+name: user
+table: users
+fields:
+- id:
+    - comment
+- name
+- surname
+- sex
+- date_of_birth
+comment: This view gives primary information about user data.
+```
+
+We are going to use the example above and slowly add different settings to show various features of the `list api`.
 
 ### Setting filters
 
-Starting 
+Let's start with filtering. Whenever we request a list of some kind, quickly after that we need to filter some of 
+those items. It is very easy to do this with wabase, all you need to do is to add `filter` setting after the 
+`fields` setting. For instance, in order to filter out all the males, all we need to do is add `sex = "male"` in the 
+filter setting. 
 
+```
+name: user
+table: users
+fields:
+- id:
+    - comment
+- name
+- surname
+- sex
+- date_of_birth
+filter: sex = "male"
+comment: This view gives primary information about user data.
+```
+
+Similarly, in order to filter all people older than 18 years old we just add.
 
 ### =
 

@@ -14,7 +14,7 @@ different kinds of requests.
     * [View for insert and update APIs](View-InsertUpdate.md)
 * [Table Definition](Table-Definition.md)
 
-- - -
+---
 
 ## Simple view
 In wabase you define views through `.yaml` files. Multiple views can be defined in a single file, but in order to keep 
