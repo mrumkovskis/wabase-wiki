@@ -46,9 +46,28 @@ comment: This view gives primary information about user data.
 
 We are going to use the example above and slowly add different settings to show various features of the `list api`.
 
+###  Preprocessing database data
+Quite often we need the data to be preprocessed on the back-end side before sending the view to the web. This can be 
+easily done by declaring a field followed by equation sign and then writing the expression like this `- name_of_fiel 
+= expression`. For instance, to create a single field containing full name of a user, all we need to do is to append 
+the name, a space and the surname, like this:
+
+```
+name: user
+table: users
+fields:
+- id
+- full_name = user.name + ' ' + user.surname
+- surname
+- sex
+- date_of_birth
+comment: This view gives primary information about user data.
+```
+**#TODO** Ask about rules of expressions.
+
 ### Setting filters
 
-Let's start with filtering. Whenever we request a list of some kind, quickly after that we need to filter some of 
+Whenever we request a list of some kind, quickly after that we need to filter some of 
 those items. It is very easy to do this with wabase, all you need to do is to add `filter` setting after the 
 `fields` setting. For instance, in order to filter out all the males, all we need to do is add `sex = "male"` in the 
 filter setting. 
@@ -68,6 +87,20 @@ comment: This view gives primary information about user data.
 ```
 
 Similarly, in order to filter all people older than 18 years old we just add.
+
+```
+name: user
+table: users
+fields:
+- id:
+    - comment
+- name
+- surname
+- sex
+- date_of_birth
+filter: sex = "male"
+comment: This view gives primary information about user data.
+```
 
 ### =
 
