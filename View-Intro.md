@@ -56,6 +56,11 @@ however we strongly encourage you to use it. This setting's whole purpose is for
 is for. It can be placed in the very end as shown in the **Simple View** section above, or it can be placed right after 
 the `name` setting.
 
+## AUTH
+
+## API
+
+## EXTENDS
 
 ## View for different HTTPs methods
 
