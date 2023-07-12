@@ -40,7 +40,15 @@ Even without any prior knowledge about wabase, this view should be pretty self-e
 `user` that reads/writes to fields `id`, `name`, `surname`, `sex` and `date_of_birth` which are fields of table 
 names `users`. 
 
-## Primary fields
+> 1: {id: 1, code: "LVHABA-1", country_code: 1, name: "Swedbank"}
+>
+>
+>
+>
+>
+>
+
+## Primary settings
 There are **3 primary settings for every view** - `name`, `table` and `fields`. These three fields are compulsory 
 and should be defined in the order shown above. 
 
@@ -56,23 +64,14 @@ however we strongly encourage you to use it. This setting's whole purpose is for
 is for. It can be placed in the very end as shown in the **Simple View** section above, or it can be placed right after 
 the `name` setting.
 
-## AUTH
+`Auth setting`
 
-## API
+`Extends setting`
 
-## EXTENDS
+## HTTP methods to Wabase API to SQL request
+This might as well be one of the most important sections. 
 
-## View for different HTTPs methods
-
+## Next up
 Now you are equipped with the most basic knowledge about defining a view with wabase, so it's about time to test 
 it out. Let's use the very same `user` view we defined above and see what we can do just with this view and 
 different HTTPs methods. However, before we begin, we should set up our test environment.
-
-> 1: {id: 1, code: "LVHABA-1", country_code: 1, name: "Swedbank"}
->
->
->
->
->
->
-

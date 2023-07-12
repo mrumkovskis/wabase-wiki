@@ -1,8 +1,9 @@
 # Views for GET 
 
-In this section we are going to discuss GET method specifically and what features does it have. The features 
-discussed in this chapter are unique for this method. However, before we do that, we are going to see how HTTP GET 
-method is matched with Wabase's inner APIs and how we implement these feature to achieve our goals.
+In this section we are going to discuss Wabase functionality for `HTTP-GET` method specifically and features specific 
+to this method. Before getting to the features we should remember that HTTP GET method can be matched to Wabase's 
+`get-API` or `list-API`. While the former will return a single record, the latter will return a list of records. 
+Therefore, there are some distinct features for both of those. We are going to start with th
 
 SQL / trSQL ref
 
@@ -18,10 +19,7 @@ SQL / trSQL ref
 
 ---
 
-#API
-
-
-## HTTP methods and Wabase API
+## HTTP methods to Wabase API to SQL request
 First of all,
 
 **#DONE**: ask about how APIs and HTTP methods are connected
@@ -37,8 +35,9 @@ Thus depending on your needs you are going to use the according combination of H
 
 ## Get matched with `list` API
 
-This is the most common type of requests. We use list API whenever we need to get a list of items. Let's get back to 
-our very first example from the View-Intro. 
+This is one of the most common type of requests. We use `API-list` whenever we need to get a list of items. In order 
+to use it, all we need to do is to send `HTTP-GET` to `baseURL/nameOfTheView`. Now let's see how this works in 
+action and  get back to our very first example from the View-Intro. 
 
 ```
 name: user
