@@ -69,7 +69,12 @@ the `name` setting.
 `Extends setting`
 
 ## HTTP methods to Wabase API to SQL request
-This might as well be one of the most important sections. 
+This might as well be one of the most important sections for understanding and learning all the capabilities 
+of Wabase. The idea is very simple yet very powerful.
+
+As already mentioned, we define views with `.yaml` files. Then, when we send a view, it goes through Wabase's inner 
+API, which generates the treSQL inquiry, which is then translated into sql. Thus, the key concept to understand is 
+that in the end, most  
 
 ## Next up
 Now you are equipped with the most basic knowledge about defining a view with wabase, so it's about time to test 
