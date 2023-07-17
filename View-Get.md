@@ -1,15 +1,15 @@
-# Views for GET 
+# Views for GET
 
-In this section we are going to discuss Wabase functionality for `HTTP-GET` method specifically and features specific 
-to this method. Before getting to the features we should remember that HTTP GET method can be matched to Wabase's 
-`get-API` or `list-API`. While the former will return a single record, the latter will return a list of records. 
-Therefore, there are some distinct features for both of those. We are going to start with th
-
-SQL / trSQL ref
+In this section we are going to discuss Wabase functionality for `HTTP-GET` method specifically and features specific
+to this method. Before anything else, we should remember that HTTP requests are matched to Wabase's APIs. HTTP GET 
+method can be matched to Wabase's `get-API` or `list-API`. Both are very similar, yet there are some minor 
+differences between the two. The former will return a single record and the latter will return a list of records. 
+We are going to start with the `list-API` and its features.
 
 ---
 
 ## Table of Contents
+
 * [Home](Home.md)
 * [View Definition](View-Intro.md)
     * [Intro](View-Intro.md)
@@ -19,8 +19,7 @@ SQL / trSQL ref
 
 ---
 
-## HTTP methods to Wabase API to SQL request
-First of all,
+
 
 **#DONE**: ask about how APIs and HTTP methods are connected
 
@@ -28,16 +27,13 @@ if id then get otherwise list
 
 HTTP get > Wabase get or Wabase list
 
-
 Thus depending on your needs you are going to use the according combination of HTTP method and URL.
-
-
 
 ## Get matched with `list` API
 
-This is one of the most common type of requests. We use `API-list` whenever we need to get a list of items. In order 
-to use it, all we need to do is to send `HTTP-GET` to `baseURL/nameOfTheView`. Now let's see how this works in 
-action and  get back to our very first example from the View-Intro. 
+This is one of the most common type of requests. We use `API-list` whenever we need to get a list of items. In order
+to use it, all we need to do is to send `HTTP-GET` to `baseURL/nameOfTheView`. Now let's see how this works in
+action and get back to our very first example from the View-Intro.
 
 ```
 name: user
@@ -54,10 +50,11 @@ comment: This view gives primary information about user data.
 
 We are going to use the example above and slowly add different settings to show various features of the `list api`.
 
-###  Field expressions
-Quite often we need the data to be preprocessed on the back-end side before sending the view to the web. This can be 
-easily done by declaring a field followed by equation sign and then writing the expression like this `- name_of_fiel 
-= expression`. For instance, to create a single field containing full name of a user, all we need to do is to append 
+### Field expressions
+
+Quite often we need the data to be preprocessed on the back-end side before sending the view to the web. This can be
+easily done by declaring a field followed by equation sign and then writing the expression like this `- name_of_fiel
+= expression`. For instance, to create a single field containing full name of a user, all we need to do is to append
 the name, a space and the surname, like this:
 
 ```
@@ -78,10 +75,10 @@ tresql column clause expression
 
 ### Setting filters
 
-Whenever we request a list of some kind, quickly after that we need to filter some of 
-those items. It is very easy to do this with wabase, all you need to do is to add `filter` setting after the 
-`fields` setting. For instance, in order to filter out all the males, all we need to do is add `sex = "male"` in the 
-filter setting. 
+Whenever we request a list of some kind, quickly after that we need to filter some of
+those items. It is very easy to do this with wabase, all you need to do is to add `filter` setting after the
+`fields` setting. For instance, in order to filter out all the males, all we need to do is add `sex = "male"` in the
+filter setting.
 
 ```
 name: user
@@ -96,6 +93,7 @@ fields:
 filter: sex = "male"
 comment: This view gives primary information about user data.
 ```
+
 filter is where clause
 
 -smth1
@@ -118,7 +116,6 @@ fields:
 filter: sex = "male"
 comment: This view gives primary information about user data.
 ```
-
 
 ```
 name: pieteikums_list
@@ -156,6 +153,7 @@ filter:
   - if_defined(:planotais_beigu_datums_lidz, darbibas_periods_lidz <= :planotais_beigu_datums_lidz::date)
 
 ```
+
 ^ is field expression reference to a field name
 
 ### Joins
@@ -220,7 +218,6 @@ fields:
         - apraksts
 
 ```
-
 
 ```
 name: pieteikums_view
@@ -316,8 +313,8 @@ fields:
 
 select statement join clause
 
-
 list
+
 1. =
 2. filter
 3. join
@@ -325,29 +322,25 @@ list
 4. group
 5. limit
 
-
-
 ## Get a record
+
 1. =
-2. join 
+2. join
 3. . key
-
-
-
 
 ## Get a count
 
 filter group limit (order, field, = don't do anything), join
 
-
-As you can see, in order to do this you  define a new field followed by colon `:` and then follow the regular view
+As you can see, in order to do this you define a new field followed by colon `:` and then follow the regular view
 definition with a one tab indent. Thus nested view follows the same definition syntax. Of course, you can also
 define third and fourth layers in the same manner, with each next layer having one more tab indent.
 
 ## Joins
+
 **#TODO** Nested vs joins. How view depends on API.
 
-While the regular nested views are usually used for post, 
+While the regular nested views are usually used for post,
 
 ```
 name: table_alias_test_bank_1
@@ -363,7 +356,6 @@ joins:
 - bk.name -> bank.name    = _
 - cr.name -> country.name = _
 ```
-
 
 ```
 name: account_details
@@ -398,7 +390,6 @@ fields:
     order:
     - id
 ```
-
 
 ```
 coalesce(_, '')
@@ -456,6 +447,7 @@ fields:
     - balance [!]
 
 ```
+
 ## Filter
 
 ## Order
@@ -463,6 +455,7 @@ fields:
 ## Comments
 
 # GET, LIST, COUNT
+
 ## get addS
 
 filter, = and join, key
@@ -475,8 +468,6 @@ filter order group limit, join, =
 
 filter group limit (order, field, = don't do anything), join
 
-
-
-
 # DELETE
+
 key
