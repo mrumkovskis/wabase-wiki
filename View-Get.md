@@ -1,10 +1,10 @@
 # Views for GET
 
 In this section we are going to discuss Wabase functionality for `HTTP-GET` method specifically and features specific
-to this method. Before anything else, we should remember that HTTP requests are matched to Wabase's APIs. HTTP GET 
+to this method. Before anything else, we should remember that HTTP requests are matched to Wabase's APIs. `HTTP-GET` 
 method can be matched to Wabase's `get-API` or `list-API`. Both are very similar, yet there are some minor 
 differences between the two. The former will return a single record and the latter will return a list of records. 
-We are going to start with the `list-API` and its features.
+You can even use the same vie definition for both by setting `get-API` and `list-API` in the `API` setting of a view.
 
 ---
 
@@ -19,19 +19,9 @@ We are going to start with the `list-API` and its features.
 
 ---
 
+## `HTTP-GET` matched with `list-API`
 
-
-**#DONE**: ask about how APIs and HTTP methods are connected
-
-if id then get otherwise list
-
-HTTP get > Wabase get or Wabase list
-
-Thus depending on your needs you are going to use the according combination of HTTP method and URL.
-
-## Get matched with `list` API
-
-This is one of the most common type of requests. We use `API-list` whenever we need to get a list of items. In order
+This is one of the most common type of requests. We use `list-API` whenever we need to get a list of items. In order
 to use it, all we need to do is to send `HTTP-GET` to `baseURL/nameOfTheView`. Now let's see how this works in
 action and get back to our very first example from the View-Intro.
 
@@ -48,32 +38,38 @@ fields:
 comment: This view gives primary information about user data.
 ```
 
-We are going to use the example above and slowly add different settings to show various features of the `list api`.
+We are going to use the example above and slowly add different settings to show various features of the `list-API`. 
 
-### Field expressions
+### Fields section
 
 Quite often we need the data to be preprocessed on the back-end side before sending the view to the web. This can be
-easily done by declaring a field followed by equation sign and then writing the expression like this `- name_of_fiel
-= expression`. For instance, to create a single field containing full name of a user, all we need to do is to append
-the name, a space and the surname, like this:
+easily done by declaring a field followed by equation sign and then writing the expression. This is how it looks 
+like this: `- name_of_fiel = expression`. For instance, to create a single field containing full name of a user, all 
+we need to do is to append the name, a space and the surname, using sql concat_ws function. Like this  `- full_name 
+= concat_ws(' ', u.name, u.surname)`
 
 ```
 name: user
 table: users
 fields:
 - id
-- full_name = user.name + ' ' + user.surname
-- surname
+- full_name = concat_ws(' ', u.name, u.uzvards)
 - sex
 - date_of_birth
-- balance = balance * 10
-comment: This view gives primary information about user data.
 ```
 
-**#DONE** Ask about rules of expressions.
-tresql column clause expression
+Field expressions are almost limitless, you can preprocess data from the database however you like. In order learn 
+all the possibilities, let's remember **HTTP request to Wabase API to SQL request** section from View-Intro. There 
+we discussed that views we define in `.yaml` are ultimately transformed into an SQL request. Here we can see that, 
+fields clause can be directly compared to sql select clause. So, if we use this view through `HTTP-GET` by sending 
+`data/user` we should see the generated sql request in the terminal window with the back-end running, and it should 
+look like this: 
 
-### Setting filters
+```
+select u.id, concat_ws(' ',u.name,u.surname) as full_name, u.sex, u,date_of_birth from users
+```
+
+### Filter section
 
 Whenever we request a list of some kind, quickly after that we need to filter some of
 those items. It is very easy to do this with wabase, all you need to do is to add `filter` setting after the
@@ -90,7 +86,8 @@ fields:
 - surname
 - sex
 - date_of_birth
-filter: sex = "male"
+filter:
+- sex = male'
 comment: This view gives primary information about user data.
 ```
 

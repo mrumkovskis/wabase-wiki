@@ -51,9 +51,9 @@ names `users`.
 >
 >
 
-## Primary settings
+## Primary sections of a view
 
-There are **3 primary settings for every view** - `name`, `table` and `fields`. These three fields are compulsory
+There are **3 primary section for every view** - `name`, `table` and `fields`. These three fields are compulsory
 and should be defined in the order shown above.
 
 The first setting for every view is `name`. This setting defines the name of the view, and therefore it's compulsory
