@@ -69,12 +69,16 @@ look like this:
 select u.id, concat_ws(' ',u.name,u.surname) as full_name, u.sex, u,date_of_birth from users
 ```
 
+**#TODO** sortable, comment, no update, readonly options
+
+**#TODO** concat_ws(' ', vards, uzvards) %~~~% :q?
+
+
 ### Filter section
 
-Whenever we request a list of some kind, quickly after that we need to filter some of
-those items. It is very easy to do this with wabase, all you need to do is to add `filter` setting after the
-`fields` setting. For instance, in order to filter out all the males, all we need to do is add `sex = "male"` in the
-filter setting.
+Whenever we request a list of some kind, quickly after that we need to filter some of those items out. It is very easy 
+to do this with wabase, all you need to do is to add `filter` clause after the `fields` clause. For instance, in 
+order to filter out all the males, all we need to do is add `sex = 'male'` in the filter setting.
 
 ```
 name: user
@@ -87,16 +91,16 @@ fields:
 - sex
 - date_of_birth
 filter:
-- sex = male'
+- sex = 'male'
 comment: This view gives primary information about user data.
 ```
 
-filter is where clause
+Just like `fields section` is the SELECT clause of an sql statement, as you might have guessed, filter clause is WHERE
+clause. Thus the view above is transformed to this sql request:
 
--smth1
--smth2
-
-=> smth1 AND smth2
+```
+select u.id, concat_ws(' ',u.name,u.surname) as full_name, u.sex, u,date_of_birth from users where sex is 'male'
+```
 
 Similarly, in order to filter all people older than 18 years old we just add.
 
@@ -152,6 +156,8 @@ filter:
 ```
 
 ^ is field expression reference to a field name
+
+**#TODO** custom search requests concat_ws(' ', vards, uzvards) %~~~% :q?
 
 ### Joins
 
