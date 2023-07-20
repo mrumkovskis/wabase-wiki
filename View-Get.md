@@ -73,6 +73,7 @@ select u.id, concat_ws(' ',u.name,u.surname) as full_name, u.sex, u,date_of_birt
 
 **#TODO** concat_ws(' ', vards, uzvards) %~~~% :q?
 
+**#TODO** 'field -> = _::json'
 
 ### Filter section
 
@@ -156,10 +157,13 @@ filter:
 ```
 
 ^ is field expression reference to a field name
-
-**#TODO** custom search requests concat_ws(' ', vards, uzvards) %~~~% :q?
+**#TODO** find what's a good place for field expression reference (^) in terms of structure (field section?)
+**#TODO** custom search requests 'concat_ws(' ', vards, uzvards) %~~~% :q?'
 
 ### Joins
+
+**#TODO** joins
+**#TODO** '- partneri * pieteikuma_partneri_editable'
 
 ``` 
 name: pieteikums_base
