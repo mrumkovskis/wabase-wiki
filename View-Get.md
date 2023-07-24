@@ -118,44 +118,7 @@ filter: sex = "male"
 comment: This view gives primary information about user data.
 ```
 
-```
-name: pieteikums_list
-table: pieteikums p
-api: pieteikums_skatit list, pieteikums_skatit count
-comments: Pieteikumu saraksts
-auth: p.statuss != 'Melnraksts' & p.statuss != 'VERSIJA' & can_access_pieteikums(p.id)
-joins:
-  - p/konkurss k
-  - k/programma prog
-fields:
-  - id
-  - statuss
-  - programma = prog.nosaukums
-  - konkurss = k.nosaukums
-  - k_numurs = k.numurs
-  - k_beigu_datums = k.beigu_datums
-  - iesniegsanas_laiks
-  - progammas_nosaukums
-  - uznemums_nosaukums
-  - uznemums_registracijas_nr
-  - darbibas_periods_no
-  - darbibas_periods_lidz
-  - pieprasitais_finansejums = (pieteikuma_budzets pb/pieteikuma_budzeta_gads pbg[pb.pieteikums_id = p.id]{sum(pbg.summa)})
-  - numurs = concat_ws('/', k.numurs, lpad(p.numurs::varchar, 3, '0'))
-filter:
-  - if_defined(:q, ts_query(p.weighted_tsv, :q))
-  - if_defined(:konkursa_pieteiksanas_beigu_datums_no, ^k_beigu_datums >= :konkursa_pieteiksanas_beigu_datums_no::date)
-  - if_defined(:konkursa_pieteiksanas_beigu_datums_lidz, ^k_beigu_datums <= :konkursa_pieteiksanas_beigu_datums_lidz::date)
-  - if_defined(:pieprasitais_finansejums_no, ^pieprasitais_finansejums >= :pieprasitais_finansejums_no::numeric)
-  - if_defined(:pieprasitais_finansejums_lidz, ^pieprasitais_finansejums <= :pieprasitais_finansejums_lidz::numeric)
-  - if_defined(:planotais_sakuma_datums_no, darbibas_periods_no >= :planotais_sakuma_datums_no::date)
-  - if_defined(:planotais_sakuma_datums_lidz, darbibas_periods_no <= :planotais_sakuma_datums_lidz::date)
-  - if_defined(:planotais_beigu_datums_no, darbibas_periods_lidz >= :planotais_beigu_datums_no::date)
-  - if_defined(:planotais_beigu_datums_lidz, darbibas_periods_lidz <= :planotais_beigu_datums_lidz::date)
-
-```
-
-^ is field expression reference to a field name
+**#TODO**: ^ is field expression reference to a field name. Where to define it in the docs.
 
 **#TODO** custom search requests concat_ws(' ', vards, uzvards) %~~~% :q?
 
