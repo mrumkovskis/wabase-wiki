@@ -19,7 +19,7 @@ You can even use the same vie definition for both by setting `get-API` and `list
 
 ---
 
-## `HTTP-GET` matched with `list-API`
+## `HTTP-get` matched with `list-API`
 
 This is one of the most common type of requests. We use `list-API` whenever we need to get a list of items. In order
 to use it, all we need to do is to send `HTTP-GET` to `baseURL/nameOfTheView`. Now let's see how this works in
@@ -71,8 +71,7 @@ select u.id, concat_ws(' ',u.name,u.surname) as full_name, u.sex, u,date_of_birt
 
 **#TODO** sortable, comment, no update, readonly options
 
-**#TODO** concat_ws(' ', vards, uzvards) %~~~% :q?
-
+**#TODO** 'field -> = _::json'
 
 ### Filter section
 
@@ -118,12 +117,23 @@ filter: sex = "male"
 comment: This view gives primary information about user data.
 ```
 
+
+
+
+
+**#TODO** find what's a good place for field expression reference (^) in terms of structure (field section?)
+
+**#TODO** custom search requests 'concat_ws(' ', vards, uzvards) %~~~% :q?'
+
 **#TODO**: ^ is field expression reference to a field name. Where to define it in the docs.
 
 **#TODO** custom search requests concat_ws(' ', vards, uzvards) %~~~% :q?
 
 ### Joins
 
+**#TODO** joins
+**#TODO** '- partneri * pieteikuma_partneri_editable'
+**#TODO** joins vs child/ref
 ``` 
 name: pieteikums_base
 table: pieteikums p
