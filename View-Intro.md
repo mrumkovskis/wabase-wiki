@@ -16,6 +16,8 @@ different kinds of requests.
     * [View for insert and update APIs](View-InsertUpdate.md)
 * [Table Definition](Table-Definition.md)
 
+
+
 ---
 
 ## Simple view
@@ -26,7 +28,7 @@ pattern. All the views should be located in `/views` directory.
 
 Now let's take a look at how generic view looks.
 
-```
+```yaml
 name: user
 table: users
 fields:

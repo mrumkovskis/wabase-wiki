@@ -4,7 +4,7 @@ We've just seen that fields of a view are defined under the `fields:` section of
 different settings we can set for individual fields.
 
 
-```
+<TODO
 name: user
 comment: This view gives primary information about user data.
 table: users
@@ -15,7 +15,7 @@ fields:
 - age               int     #type
 - sex       
 
-```
+
 
 
 ### Not Null
@@ -65,7 +65,7 @@ after : comment
 
 Now let's take a look on how to define a nested view - there is an example below.
 
-```
+```yaml
 name: bank_with_account
 table: bank
 fields:
@@ -101,7 +101,6 @@ fields:
       - ll / adm_lietotajs l
     fields:
       - adm_loma = ^lomas_choice.nosaukums -> = ^lomas_choice[^nosaukums = _]{id}
-
 ```
 
 
