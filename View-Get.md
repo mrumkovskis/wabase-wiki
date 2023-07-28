@@ -143,9 +143,18 @@ join clause
 
 ## `HTTP-get` matched with `get-API`
 
-Now, when we've discussed `list-API`, the next one in line is `get-API`. While the former returns a test so that we 
-can see what is list of records, the latter provides detailed information about one record only. The two APIs are 
-very similar and most of the setting are the same.
+Now, when we've discussed `list-API`, the next one in line is `get-API`. While the former returns a list of records, 
+the latter provides detailed information about one record only. The two APIs are very similar and most of the setting 
+are the same. There are a few minor differences, between the two, and we are going to discuss those right now. 
+
+First and foremost - how to use `get-API`. It is as simple as using the `list-API`, but instead of sending a request 
+to the `baseURL/nameOfTheView`, we send it to `baseURL/nameOfTheView/recordID`. Here `recordID` matches the one in 
+the database, therefore requesting a record is possible only by its database id.  
+
+Previously we've discussed different sections for `list-API`. Namely: field, filter, join, order, group and limit 
+sections. It should be clear, why most of those simply do not apply to `get-API` - most of them just don't make 
+sense for requesting a single record. 
+
 
 Already explained above: filter, = and join, key
 New: key
