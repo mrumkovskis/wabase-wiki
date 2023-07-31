@@ -116,7 +116,7 @@ fields:
 - sex
 - date_of_birth
 filter: ??????????
-comment: This view gives primary information about user data.
+comment: his view provides list of users older than 18 years old with basic information about each.
 ```
 
 **#TODO** custom search requests 'concat_ws(' ', vards, uzvards) %~~~% :q?'
@@ -129,11 +129,54 @@ comment: This view gives primary information about user data.
 
 ### Order section
 
+This is a relatively self-explanatory section. In `order` section we can define how do we want the list to be 
+ordered. It is directly translated to SQL `ORDER BY` clause. By default, the list is ordered by `id`, just like in sql 
+but if we wish, we can change it to any other field. for instance using the same view we defined before, we can 
+order the list by `name` in alphabetic order.
+
+```yaml
+name: user
+table: users
+fields:
+- id
+- name
+- surname
+- sex
+- date_of_birth
+order: name
+comment: This view provides list of users with basic information about each ordered by name.
+```
+
+**#TODO** Ordering. Can be done by requested fields or any db field?
+**#TODO** What are other ordering options
+
+Really, that's it. There isn't anything more to this section. Basic—yet quite useful. 
+
 ### Group section
+
+Again, ones with some SQL experience instantly understand what this section is for. It is directly translated to 
+SQL `GROUP BY` clause. By default, there is no grouping, but with this section you can order the list into 
+multiple sublists. Here we are going to introduce another structure - bank. 
+```yaml
+name: bank
+table: bank
+fields:
+- id
+- name
+- code
+- country_code
+group: country_code
+comment: This view provides list of banks with basic information about each grouped by country.
+```
+
+**#TODO** Is there some default grouping
+
 
 ### Limit Section
 
 ### Joins section
+
+This might as well be one of the most difficult section
 
 **#TODO** joins
 **#TODO** '- partneri * pieteikuma_partneri_editable'
