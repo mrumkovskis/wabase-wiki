@@ -187,7 +187,7 @@ fields:
 - sex
 - date_of_birth
 limit: 100
-comment: This view gives primary information about user data.
+comment: This view gives primary information about user data with limit of 100 records.
 ```
 ### Joins section
 
