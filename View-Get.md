@@ -173,7 +173,22 @@ comment: This view provides list of banks with basic information about each grou
 
 
 ### Limit Section
+Similarly to the previous two, this setting is also obvious. It is directly translated to sql `LIMIT` clause. All 
+this section does is limit the number of records returned in the list. 
 
+```yaml
+name: user
+table: users
+fields:
+- id:
+  - comment
+- name
+- surname
+- sex
+- date_of_birth
+limit: 100
+comment: This view gives primary information about user data.
+```
 ### Joins section
 
 This might as well be one of the most difficult section
