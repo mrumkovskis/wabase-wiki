@@ -168,6 +168,7 @@ fields:
 group: country_code
 comment: This view provides list of banks with basic information about each grouped by country.
 ```
+> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users GROUP BY country_code;
 
 **#TODO** Is there some default grouping
 
