@@ -180,15 +180,19 @@ this section does is limit the number of records returned in the list.
 name: user
 table: users
 fields:
-- id:
-  - comment
-- name
-- surname
+- id
+- full_name = concat_ws(' ', u.name, u.surname)
 - sex
 - date_of_birth
 limit: 100
 comment: This view gives primary information about user data with limit of 100 records.
 ```
+
+Thus, the view above would be translated into the following sql request
+
+> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users LIMIT 100;
+
+
 ### Joins section
 
 This might as well be one of the most difficult section
