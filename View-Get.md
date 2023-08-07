@@ -147,6 +147,8 @@ order: name
 comment: This view provides list of users with basic information about each ordered by name.
 ```
 
+> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users ORDER BY name;
+
 **#TODO** Ordering. Can be done by requested fields or any db field?
 **#TODO** What are other ordering options
 
@@ -159,7 +161,7 @@ SQL `GROUP BY` clause. By default, there is no grouping, but with this section y
 multiple sublists. Here we are going to introduce another structure - bank. 
 ```yaml
 name: bank
-table: bank
+table: banks
 fields:
 - id
 - name
@@ -168,7 +170,7 @@ fields:
 group: country_code
 comment: This view provides list of banks with basic information about each grouped by country.
 ```
-> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users GROUP BY country_code;
+> SELECT id, name, code, country_code FROM banks GROUP BY country_code;
 
 **#TODO** Is there some default grouping
 
