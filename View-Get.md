@@ -95,6 +95,9 @@ filter:
 comment: This view provides basic users data and filters out all males
 ```
 
+> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users WHERE sex = 'male';
+
+
 Just like `fields section` is the SELECT clause of an sql statement, as you might have guessed, filter clause is WHERE
 clause. Thus, the view above is transformed to this sql request:
 
