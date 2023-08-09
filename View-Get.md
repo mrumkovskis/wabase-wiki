@@ -29,14 +29,15 @@ action and get back to our very first example from the View-Intro.
 name: user
 table: users
 fields:
-- id:
-    - comment
+- id
 - name
 - surname
 - sex
 - date_of_birth
 comment: This view gives primary information about user data.
 ```
+> SELECT id, name, surname, sex, date_of_birth FROM users
+
 
 We are going to use the example above and slowly add different settings to show various features of the `list-API`.
 
