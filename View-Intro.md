@@ -1,8 +1,9 @@
 # Defining a view with wabase.
 
-Defining a view is the second of the Wabase's key features. In this section we are going to take a closer look at
-all the features and capabilities of defining a view, as well as an example no illustrate the concepts. Firstly, we
-are going to see how to define the most basic view in wabase, but then we will discuss some API specific features for
+Defining a view is the second of the Wabase's key features. In this section, we are going to take a closer look at
+all the features and capabilities of defining a view, as well as an example to illustrate the concepts.
+Firstly, we are going to see how to define the most basic view in wabase, but then we will discuss some API 
+specific features for
 different kinds of requests.
 
 ---
@@ -23,7 +24,7 @@ different kinds of requests.
 ## Simple view
 
 In wabase you define views through `.yaml` files. Multiple views can be defined in a single file, but in order to keep
-our views organised and avoid large files, usually views are distributed among multiple files following some logical
+our views organized and avoid large files, usually views are distributed among multiple files following some logical
 pattern. All the views should be located in `/views` directory.
 
 Now let's take a look at how generic view looks.
@@ -53,9 +54,9 @@ names `users`.
 >
 >
 
-## Primary sections of a view
+## The basic sections of view
 
-There are **3 primary section for every view** - `name`, `table` and `fields`. These three fields are compulsory
+There are **three basic sections for every view** - `name`, `table` and `fields`. These three fields are compulsory
 and should be defined in the order shown above.
 
 The first setting for every view is `name`. This setting defines the name of the view, and therefore it's compulsory
@@ -65,8 +66,8 @@ The other two settings are `table` and `fields`. These two settings define the t
 which data will be read-from/written-to. These two fields are also compulsory, since otherwise a view simply won't
 have any logical purpose.
 
-One more primary setting for every view is `comment`. This is the only arbitrary setting of the four basic settings,
-however we strongly encourage you to use it. This setting's whole purpose is for you to describe who this exact view
+One more primary setting for every view is `comment`. This is the only arbitrary setting of the four basic settings.
+However, we strongly encourage you to use it. This setting's whole purpose is for you to describe who this exact view
 is for. It can be placed in the very end as shown in the **Simple View** section above, or it can be placed right after
 the `name` setting.
 
@@ -77,7 +78,8 @@ the `name` setting.
 ## HTTP request to Wabase API to SQL request
 
 This might as well be one of the most important sections for understanding and learning all the capabilities
-of Wabase. The idea is very simple yet very powerful.
+of Wabase.
+The idea is quite simple yet very powerful.
 
 As already mentioned, we define views with `.yaml` files. Then, while working with a view through HTTP requests, it
 goes through Wabase's inner API (backend server), which generates the treSQL inquiry, which is then translated into
@@ -89,8 +91,8 @@ an sql request with its own select, from, where and with clauses.
 
 ## Prerequisites and dependencies - treSQL
 
-Before moving on, there is one more thing. In order to fully understand and be able to use all the features, of
-Wabase, understanding basic syntax of treSQL is essential. You can find more information about treSQL
+Before moving on, there is one more thing. In order to fully understand and be able to use all the features of
+Wabase, understanding the basic syntax of treSQL is essential. You can find more information about treSQL
 [here](https://github.com/mrumkovskis/tresql).
 
 ## Next up
