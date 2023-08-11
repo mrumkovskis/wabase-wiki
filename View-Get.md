@@ -3,8 +3,8 @@
 In this section we are going to discuss Wabase functionality for `HTTP-GET` method specifically and features specific
 to this method. Before anything else, we should remember that HTTP requests are matched to Wabase's APIs. `HTTP-GET`
 method can be matched to Wabase's `get-API` or `list-API`. Both are very similar, yet there are some minor
-differences between the two. The former will return a single record and the latter will return a list of records.
-You can even use the same vie definition for both by setting `get-API` and `list-API` in the `API` setting of a view.
+differences between the two. The former will return a single record, and the latter will return a list of records.
+You can even use the same view definition for both by setting `get-API` and `list-API` in the `API` setting of a view.
 
 ---
 
@@ -21,7 +21,7 @@ You can even use the same vie definition for both by setting `get-API` and `list
 
 ## `HTTP-get` matched with `list-API`
 
-This is one of the most common type of requests. We use `list-API` whenever we need to get a list of items. In order
+This is one of the most common types of requests. We use `list-API` whenever we need to get a list of items. In order
 to use it, all we need to do is to send `HTTP-GET` to `baseURL/nameOfTheView`. Now let's see how this works in
 action and get back to our very first example from the View-Intro.
 
@@ -45,7 +45,7 @@ We are going to use the example above and slowly add different settings to show 
 
 Quite often we need the data to be preprocessed on the back-end side before sending the view to the web. This can be
 easily done by declaring a field followed by equation sign and then writing the expression. This is how it looks
-like this: `- name_of_fiel = expression`. For instance, to create a single field containing full name of a user, all
+like this: `- name_of_fiel = expression`. For instance, to create a single field containing the full name of a user, all
 we need to do is to append the name, a space and the surname, using sql concat_ws function. Like this  `- full_name
 = concat_ws(' ', u.name, u.surname)`
 
@@ -60,7 +60,7 @@ fields:
 comment: This view provides basic users data
 ```
 
-Field expressions are almost limitless, you can preprocess data from the database however you like. In order learn
+Field expressions are almost limitless, you can preprocess data from the database, however, you like. In order to learn
 all the possibilities, let's remember **HTTP request to Wabase API to SQL request** section from View-Intro. There
 we discussed that views we define in `.yaml` are ultimately transformed into an SQL request. Here we can see that,
 fields clause can be directly compared to sql select clause. So, if we use this view through `HTTP-GET` by sending
@@ -77,8 +77,8 @@ look like this:
 
 ### Filter section
 
-Whenever we request a list of some kind, next step after is that we need to filter some of those items out. It is very
-easy to do this with wabase, all you need to do is to add `filter` clause after the `fields` clause. For instance, in
+Whenever we request a list of some kind, the next step after is that we need to filter some of those items out. It is very
+easy to do this with wabase. All you need to do is to add `filter` clause after the `fields` clause. For instance, in
 order to filter out all the males, all we need to do is add `sex = 'male'` in the filter setting.
 
 ```yaml
@@ -106,9 +106,9 @@ clause. Thus, the view above is transformed to this sql request:
 select u.id, concat_ws(' ',u.name,u.surname) as full_name, u.sex, u,date_of_birth from users where sex is 'male'
 ```
 
-Similarly, in order to filter all people older than 18 years old we just add.
+Similarly, in order to filter all people older than 18 years old, we just add
 
-**#TODO** How to calculate age. full_years function from goda_gimenes doesn't. How to use YAMLs only.
+**#TODO** How to calculate age. Full_years function from goda_gimenes doesn't. How to use YAMLs only.
 
 ```yaml
 name: user
@@ -133,9 +133,9 @@ comment: his view provides list of users older than 18 years old with basic info
 
 ### Order section
 
-This is a relatively self-explanatory section. In `order` section we can define how do we want the list to be 
+This is a relatively self-explanatory section. In `order` section we can define how we want the list to be 
 ordered. It is directly translated to SQL `ORDER BY` clause. By default, the list is ordered by `id`, just like in sql 
-but if we wish, we can change it to any other field. for instance using the same view we defined before, we can 
+but if we wish, we can change it to any other field. For instance using the same view we defined before, we can 
 order the list by `name` in alphabetic order.
 
 ```yaml
@@ -202,7 +202,7 @@ Thus, the view above would be translated into the following sql request
 
 ### Joins section
 
-This might as well be one of the most difficult section
+This might as well be one of the most difficult sections
 
 **#TODO** joins
 **#TODO** '- partneri * pieteikuma_partneri_editable'
@@ -213,8 +213,9 @@ join clause
 ## `HTTP-get` matched with `get-API`
 
 Now, when we've discussed `list-API`, the next one in line is `get-API`. While the former returns a list of records, 
-the latter provides detailed information about one record only. The two APIs are very similar and most of the setting 
-are the same. There are a few minor differences, between the two, and we are going to discuss those right now. 
+the latter provides detailed information about one record only.
+The two APIs are very similar, and most of the settings are the same. There are a few minor differences between the 
+two, and we are going to discuss those right now. 
 
 First and foremost - how to use `get-API`. It is as simple as using the `list-API`, but instead of sending a request 
 to the `baseURL/nameOfTheView`, we send it to `baseURL/nameOfTheView/recordID`. Here `recordID` matches the one in 
