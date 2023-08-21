@@ -9,8 +9,9 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
 ---
 
 ## Table of Contents
-* [Home](Home.md)
-* [View Definition](View-Intro.md)
+* Introduction 
+  * [Home](Home.md)
+* View Definition
   * [Intro](View-Intro.md)
   * [View for get, list and count APIs](View-Get.md)
   * [View for insert and update APIs](View-InsertUpdate.md)
@@ -18,10 +19,13 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
 
 ---
 
+## What is wabase for?
+
+
 ## Setting up the environment
 
-Before we start off with wabase, lets set up the test environment, so that you could try the features yourself as 
-you go. We are going to use swagger to send different HTTP requests to a local wabase server and see what the 
-response is. 
+Before we start off with wabase, let's set up the test environment, so that you can try the features yourself as you go.
+We are going to use Swagger to send different HTTP requests to a local wabase server and see what the response is.
+
 
 **#TODO:** set up the test environment and write a guide

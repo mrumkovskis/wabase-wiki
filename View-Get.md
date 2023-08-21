@@ -103,7 +103,7 @@ filter:
 comment: This view provides basic users data and filters out all males
 ```
 
-> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users WHERE sex = 'male';
+ SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users WHERE sex = 'male';
 
 
 Just like `fields section` is the SELECT clause of an sql statement, as you might have guessed, filter clause is WHERE
@@ -181,7 +181,10 @@ fields:
 group: country_code
 comment: This view provides list of banks with basic information about each grouped by country.
 ```
-> SELECT id, name, code, country_code FROM banks GROUP BY country_code;
+>SQL Translation
+>```sql
+>SELECT id, name, code, country_code FROM banks GROUP BY country_code;
+>```
 
 **#TODO** Is there some default grouping
 
@@ -209,7 +212,7 @@ Thus, the view above would be translated into the following sql request
 
 ### Joins section
 
-This might as well be one of the most difficult sections
+
 
 **#TODO** joins
 **#TODO** '- partneri * pieteikuma_partneri_editable'
