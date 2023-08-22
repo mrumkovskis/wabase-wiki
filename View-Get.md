@@ -70,6 +70,13 @@ look like this:
 
 > SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users
 
+#**TODO**
+-Fields primitive structure - Value
+-Fields complex structures - viewDef
+or
+-Inline
+- 
+
 
 **#TODO** sortable, comment, no update, readonly options
 

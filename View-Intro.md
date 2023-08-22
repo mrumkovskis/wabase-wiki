@@ -71,11 +71,11 @@ However, we strongly encourage you to use it. This setting's whole purpose is fo
 is for. It can be placed in the very end as shown in the **Simple View** section above, or it can be placed right after
 the `name` setting.
 
-`Auth setting`
+`Auth section`
 
-`Extends setting`
+`Extends section`
 
-## HTTP request to Wabase API to SQL request
+## HTTP request to Wabase API to SQL request(s)
 
 This might as well be one of the most important sections for understanding and learning all the capabilities
 of Wabase.
