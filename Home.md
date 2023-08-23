@@ -11,6 +11,7 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
 ## Table of Contents
 * Introduction 
   * [Home](Home.md)
+  * [Environment Setup](Setup-Install.md)
 * View Definition
   * [Intro](View-Intro.md)
   * [View for get, list and count APIs](View-Get.md)
