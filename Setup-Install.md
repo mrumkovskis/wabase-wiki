@@ -27,8 +27,6 @@ configured and filled with necessary data.
 docker compose up -d
 ```
 
-
-
 ### Step 3: Get the server running locally
 
 The final step is to start the server. Run the commands below from the project's root. In order to do this, firstly, we
@@ -36,7 +34,10 @@ need to get the config file
 
 ```bash
 cp ./src/main/resources/application.conf.sample ./src/main/resources/application.conf
+cp ./.env.example ./.env
 ```
+
+#TODO fix .env files
 
 Finally, we can start the server by:
 
@@ -44,11 +45,11 @@ Finally, we can start the server by:
 sbt
 ```
 
-In the oppened dialog start the server by runnnig:]
+In the oppened dialog, start the server by runnnig
 
 ```bash
 reStart
 ```
 
-
+Now you have the server running. You can open
 
