@@ -1,6 +1,12 @@
 # DummyBank install guide
 
-> Note: This guide is of Linux only!
+> Note: This guide is for Linux only!
+
+## Setting up the environment
+
+Before we start off with wabase, let's set up the test environment, so that you can try the features yourself as you go.
+We are going to use Swagger to send different HTTP requests to a local wabase server and see what the response is.
+
 
 ### List of required software to run the project:
 

@@ -18,15 +18,83 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * [View for insert and update APIs](View-InsertUpdate.md)
 * [Table Definition](Table-Definition.md)
 
+
+
+## TOC (wish list)
+
+* Introduction
+* Sample project structure
+* Quick start guide
+* Multi module projects
+* Reference guide
+  * Tresql documentation
+    * Introduction
+    * API guide
+    * Macros and function signatures
+  * Table definition
+    * MD conventions
+    * Multi db support
+  * View definition
+    * Basic structure
+    * Action
+    * Validation
+  * Scheduling
+  * Sbt mojoz documentation
+  * Authentication / Authorization  (**TBD**)
+  * Scala classes (API guide)
+  * Rest client / wabase http client
+  * Renderers (pdf, excel, csv, json)
+  * File upload / download / cleanup
+  * Configuration reference
+* Tests
+  * Yaml business scenarios
+* Documentation
+
+(**TBD**) - may change in wabase v. 8
+
 ---
 
 ## What is wabase for?
 
+Wabase is designed as framework for building RESTful APIs. It is built on top of [akka-http](https://doc.akka.io/docs/akka-http/current/index.html) . 
+Wabase is designed to be simple and easy to use, while still providing a lot of flexibility and power. 
+It is designed to be used in a microservice architecture, where each service is responsible for a specific domain.
 
-## Setting up the environment
+## Used libraries
 
-Before we start off with wabase, let's set up the test environment, so that you can try the features yourself as you go.
-We are going to use Swagger to send different HTTP requests to a local wabase server and see what the response is.
+Following libraries are used in wabase to provide functionality commonly needed in web applications: 
 
+* jmustache - for templating - https://github.com/samskivert/jmustache
+* akka and akka-http - for http server - https://doc.akka.io/docs/akka-http/current/index.html
+* hikariCP - for connection pooling - https://github.com/brettwooldridge/HikariCP
+* logback - for logging - http://logback.qos.ch/
+* commons-validator - for validation - https://commons.apache.org/proper/commons-validator/
+* commons-codec - for encoding - https://commons.apache.org/proper/commons-codec/
+* lambdaworks Scrypt - for password hashing - https://github.com/wg/scrypt
+* borer - for serialization - https://sirthias.github.io/borer/
+* quartz - for scheduling - https://www.quartz-scheduler.org/
+* openpdf - for pdf generation and parsing - https://librepdf.github.io/OpenPDF/  **TODO ???**
+* flying saucer - for pdf generation - https://flyingsaucerproject.github.io/flyingsaucer/r8/guide/users-guide-R8.html
+* simple-java-mail - for email sending - https://www.simplejavamail.org/
+* graalvm js - for javascript execution - https://www.graalvm.org/reference-manual/js/
+* scalatest - for testing - https://www.scalatest.org/
+* akka testkit - for testing - https://doc.akka.io/docs/akka/current/testing.html
 
-**#TODO:** set up the test environment and write a guide
+"In-house" products:
+
+* tresql - for SQL generation -
+* mojoz - for table metadata management -
+* querease - for database access - 
+* sbt-mojoz - for mojoz integration with sbt -
+
+# TODO:
+
+* Describe project structure in general 
+* Write a quick start guide
+* Write reference guide
+* Describe how to write multi module projects
+* Describe how to write tests
+* Describe how to write documentation - we don't have jet a documentation generator, there is something for ppa
+* link tresql documentation
+* describe app and appservice extensions
+* sbt-mojos usage
