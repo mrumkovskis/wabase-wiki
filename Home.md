@@ -22,10 +22,10 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
 
 ## TOC (wish list)
 
-* Introduction
-* Sample project structure
-* Quick start guide
-* Multi module projects
+* [Introduction](intro/00_intro.md)
+  * [Sample project structure](intro/10_sample.md)
+  * Quick start guide  (**TBD**)
+  * Multi module projects
 * Reference guide
   * Tresql documentation
     * Introduction
