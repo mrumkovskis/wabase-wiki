@@ -29,11 +29,12 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * Tresql documentation
     * Introduction
     * API guide
-    * Macros and function signatures
+    * Macros
+    * [function signatures](ref/14_function_signatures.md)
   * [Table definition](ref/20_tabledef.md)
     * MD conventions
     * Multi db support
-  * View definition
+  * [View definition](ref/30_viewdef.md)
     * Basic structure
     * Action
     * Validation

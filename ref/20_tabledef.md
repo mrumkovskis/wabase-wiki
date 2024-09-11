@@ -153,7 +153,7 @@ refs:
 
 ## Types
 
-Default supported types are defined in [mojoz-default-types.yaml](src/main/resources/mojoz-default-types.yaml).
+Default supported types are defined in [mojoz-default-types.yaml](https://github.com/guntiso/mojoz/blob/develop/src/main/resources/mojoz-default-types.yaml).
 Types can be customized and additional types can be added by including **mojoz-custom-types.yaml** file in resources.
 Key names are:
 * **type** - [mojoz] type name
