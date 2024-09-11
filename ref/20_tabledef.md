@@ -1,12 +1,3 @@
-# mojoz
-
-![Build Status](https://github.com/guntiso/mojoz/actions/workflows/ci.yaml/badge.svg)
-
-Manages relational database table metadata and query definitions.
-Generates SQL [DDL](https://en.wikipedia.org/wiki/Data_definition_language) statements from table metadata.
-Generates Scala classes or [XSD](https://en.wikipedia.org/wiki/XML_Schema_(W3C)) to receive query results.
-Used by [querease](https://github.com/guntiso/querease) to save and retrieve data.
-
 ## Table metadata
 
 Table metadata is typically loaded from YAML resource files bundled with application
@@ -77,7 +68,57 @@ where
 
 ### Indices (pk, uk, idx)
 
-![Indices syntax diagram](docs/diagrams/png/indices.png)
+# Indices Syntax Diagram
+
+```mermaid
+flowchart LR
+    S((Start)) --> column-name["column-name 111"]
+    column-name --> cn-ee( )
+    column-name --> cn-asc(["asc"])
+    column-name --> cn-desc(["desc"])
+    cn-asc --> cn-ee
+    cn-desc --> cn-ee
+    cn-ee --> E((End))
+    cn-ee --> cn-coma([","])
+    cn-coma --> column-name
+    
+    S --> index-name
+    index-name --> in-bracket(["("])
+    in-bracket --> in-column-name["column-name 2222"]
+    in-column-name --> in-ee( )
+    in-column-name --> in-asc(["asc"])
+    in-column-name --> in-desc(["desc"])
+    in-asc --> in-ee
+    in-desc --> in-ee
+    in-ee --> in-e-bracket([")"])
+    in-ee --> in-coma([","])
+    in-coma --> in-column-name
+    in-e-bracket --> E
+
+    S --> cc-bracket(["("])
+    cc-bracket --> cc-column-name["column-name 3333"]
+    cc-column-name --> cc-ee( )
+    cc-column-name --> cc-asc(["asc"])
+    cc-column-name --> cc-desc(["desc"])
+    cc-asc --> cc-ee
+    cc-desc --> cc-ee
+    cc-ee --> cc-e-bracket([")"])
+    cc-ee --> cc-coma([","])
+    cc-coma --> cc-column-name
+
+    cc-e-bracket --> cc-coma-2([","])
+    cc-coma-2 --> cc-column-name-2["column-name 444"]
+    cc-column-name-2 --> cc-ee-2( )
+    cc-column-name-2 --> cc-asc-2(["asc"])
+    cc-column-name-2 --> cc-desc-2(["desc"])
+    cc-asc-2 --> cc-ee-2
+    cc-desc-2 --> cc-ee-2
+    
+    cc-ee-2 --> cc-coma-2
+    cc-ee-2 --> E
+```    
+
+![Indices syntax diagram](../png/indices.png)
 
 If index name is not provided [DdlGenerator](https://static.javadoc.io/org.mojoz/mojoz_3/5.0.0/org/mojoz/metadata/out/DdlGenerator.html) uses
 [ConstraintNamingRules](https://static.javadoc.io/org.mojoz/mojoz_3/5.0.0/org/mojoz/metadata/out/DdlGenerator$$ConstraintNamingRules.html)
@@ -96,7 +137,7 @@ idx:
 ### Refs (foreign keys)
 
 Refs are implied from column definitions where column name or type is _table_name.column_name_. Refs can be defined explicitly for: name customization, multi-column ref creation or _on delete_ / _on update_ settings.
-![Refs syntax diagram](docs/diagrams/png/refs.png)
+![Refs syntax diagram](../png/refs.png)
 
 If ref name is not provided [DdlGenerator](https://static.javadoc.io/org.mojoz/mojoz_3/5.0.0/org/mojoz/metadata/out/DdlGenerator.html) uses
 [ConstraintNamingRules](https://static.javadoc.io/org.mojoz/mojoz_3/5.0.0/org/mojoz/metadata/out/DdlGenerator$$ConstraintNamingRules.html)
@@ -148,5 +189,3 @@ yaml:
 sql:
 - numeric(12, 2)
 ```
-
-## [API docs](https://static.javadoc.io/org.mojoz/mojoz_3/5.0.0/org/mojoz/metadata/index.html)

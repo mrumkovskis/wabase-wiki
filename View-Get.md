@@ -15,7 +15,6 @@ You can even use the same view definition for both by setting `get-API` and `lis
     * [Intro](View-Intro.md)
     * [View for GET](View-Get.md)
     * [View for POST, PUT](View-InsertUpdate.md)
-* [Table Definition](Table-Definition.md)
 
 ---
 

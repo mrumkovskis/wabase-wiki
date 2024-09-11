@@ -16,7 +16,6 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * [Intro](View-Intro.md)
   * [View for get, list and count APIs](View-Get.md)
   * [View for insert and update APIs](View-InsertUpdate.md)
-* [Table Definition](Table-Definition.md)
 
 
 
@@ -31,7 +30,7 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
     * Introduction
     * API guide
     * Macros and function signatures
-  * Table definition
+  * [Table definition](ref/20_tabledef.md)
     * MD conventions
     * Multi db support
   * View definition

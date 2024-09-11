@@ -14,7 +14,6 @@ different kinds of requests.
     * [Intro](View-Intro.md)
     * [View for GET](View-Get.md)
     * [View for insert and update APIs](View-InsertUpdate.md)
-* [Table Definition](Table-Definition.md)
 
 ---
 
