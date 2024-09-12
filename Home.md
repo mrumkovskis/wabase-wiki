@@ -38,8 +38,8 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
     * Basic structure
     * Action
     * Validation
-  * Scheduling
-  * Sbt mojoz documentation
+  * [Scheduling](misc/10_scheduling.md)
+  * [Sbt mojoz documentation](misc/20_sbt_mojoz.md)
   * Authentication / Authorization  (**TBD**)
   * Scala classes (API guide)
   * Rest client / wabase http client
