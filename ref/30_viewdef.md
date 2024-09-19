@@ -592,3 +592,79 @@ concat_ws(' ', u.name, u.surname)
 Any other properties can be added to view definition and are passed to view definition in mojoz.
 
 **TODO** - add example
+
+## Actions
+
+In adition to default save, list and other behaviors developer can extend them or completely override them by providing custom code.
+
+Actions can be defined for folowing methods:
+
+* get - get single record
+* list - list array of records
+* save - save record
+* insert - insert record
+* update - update record
+* upsert - upsert record
+* delete - delete record
+* create - create record
+* count - count number of records
+
+Here is basic example of save action: 
+
+```yaml
+name:     person
+api:      save
+table:    person
+auth get: :update_enabled = true
+fields:
+- id
+- name
+- sex
+- birthdate
+save:
+- name = :current_person_name
+- sex  = 'M'
+- save this
+```
+
+In this case, save action is used to override values of fields `name` and `sex` and then save record.
+
+Save action is defined for view by giving set of steps to complete action. Each step is executed in order and can modify context in which action is executed. 
+
+
+**TODO** add inline examples 
+
+Awailable steps are:
+
+* Evaluation - evaluate expression (todo operation?) and assign it to variable in context (`name = :current_person_name`)
+* SetEnv - evaluate expression (todo operation?) and ovveride entire context were action is executed
+* Return - return value from action
+* Validations - validate data within context
+* RemoveVar - remove variable from context
+
+Within steps folowing operations can be used:
+
+
+* tresql - execute tresql statement
+* view call - do action for another view
+* redirect - redirect to another view
+* unique - **TODO** - what is this?
+* invocation - **TODO** - what is this?
+* status - return http status code
+* variable transforms - **TODO** - what is this?
+* foreach - foreach loop block
+* if, else - if else blocks
+* resource - **TODO** - what is this?
+* file - **TODO** - what is this?
+* to file - **TODO** - what is this?
+* template - ganerate template
+* email - send email
+* http - make http call
+* http header - **TODO** - what is this?
+* db - **TODO** - what is this?
+* conf - read config parameter
+* json codec - encode or decode json
+* block - group of actions
+* job - **TODO** - what is this?
+* commit - commit transaction 
+
