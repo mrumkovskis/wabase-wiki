@@ -668,3 +668,278 @@ Within steps following operations can be used:
 * job - **TODO** - what is this?
 * commit - commit transaction 
 
+### Forming response
+
+Return statement:
+
+```yaml
+name: person_list
+table: person
+fields:
+  - id
+  - name
+  - surname
+  - sex
+  - birthdate
+filter:
+  - name %~~%
+  - surname %~~%
+list:
+  - c: count this   # named step supports also colon notation
+  - d: list  this   # named step supports also colon notation
+  - return (count = :c) + (data = :d)
+```
+
+Response as option from list
+
+```yaml
+name: purchase_get
+api: get
+db: shop_db
+table: purchase
+fields:
+  - customer
+  - purchase_time
+  - item
+  - amount
+get:
+  - unique_opt |shop_db:purchase[purchase_time = :purchase_time & customer = :customer]
+    {item, amount}
+```
+
+Returning variable as response:
+
+```yaml
+name: invocation_test_1
+table:
+api: get, save, count, delete, create
+fields:
+- s1
+- s2
+- n1
+- n2
+get:
+- setenv create this
+- s3 = org.wabase.QuereaseActionTestManager.concatStrings
+- status ok { :s3 }
+```
+
+Returning variable as response second example:
+
+```yaml
+name: http_test_2
+table:
+key: name
+api: get, list, save
+fields:
+- id
+- name
+- manipulation_date
+- vaccine
+get:
+- unique {:name name, :manipulation_date::date manipulation_date, :vaccine vaccine, :id::long id}
+list:
+- res = http '/invocation_test_1'
+- status ok :res
+```
+
+Redirect examples: 
+
+```yaml
+name:   status_test_3
+table:
+api:    get, save, list, count
+fields:
+  - id
+save:
+  - status { 303 }
+get:
+  - redirect { 'data/path/' || :id }
+list:
+  - status { 303, 'data/path', :id, '?', 'val-of-par1' par1 }
+count:
+  - redirect { null, :id, '?', (:id + 1) par1 }
+```
+
+### View call
+
+Example how to call view itself:
+
+```yaml
+name: person_list
+table: person
+fields:
+  - id
+  - name
+  - surname
+  - sex
+  - birthdate
+filter:
+  - name %~~%
+  - surname %~~%
+list:
+  - c: count this   # named step supports also colon notation
+  - d: list  this   # named step supports also colon notation
+  - return (count = :c) + (data = :d)
+```
+
+**TODO** - call other view
+
+**TODO** - discuss when permissions are checked
+
+### Flow control
+
+Foreach block:
+
+```yaml
+name: foreach_test_1
+table: if_and_foreach_test ift
+api: get, save
+key: code
+fields:
+- code
+- parent
+- value
+- children[!] * [:1(code) = parent]foreach_test_1
+save:
+- insert this
+- foreach :children :
+    - parent = :'..'.code
+    - insert this
+- get this
+update:
+- update this
+- foreach :children :
+    - parent = :'..'.code
+    - update this
+- get this
+```
+
+If block: 
+
+```yaml
+name: if_test_1
+table: if_and_foreach_test
+api: save, get, delete
+fields:
+- code
+- parent
+- value
+save:
+- code = 'if_test_1'
+- if {:value = 'yes'} :
+    - value = :value || '_value'
+    - +if_and_foreach_test{code = :code, value = :value}
+- if {:value = 'no'} :
+    - value = :value || '_value'
+    - =if_and_foreach_test[code = :code]{value = :value}
+- unique_opt if_and_foreach_test[code = :code]{code, value}
+get:
+- result = if {:code = 'true'}:
+  - unique { :code code, null parent, 'Value' value }
+- else:
+  - unique { :code code, null parent, 'Else value' value }
+- :result
+delete:
+- result:
+  - if {:code = 'true'}:
+    - unique { :code code, null parent, 'Value delete' value }
+  - else:
+    - unique { :code code, null parent, 'Else value delete' value }
+- :result
+```
+
+### Doing http call
+
+```yaml
+name: not_decode_request_insert_test
+table:
+decode request: false
+api: insert, update, get
+fields:
+- name
+get:
+- unique { :name name }
+insert:
+- status ok { if_defined_or_else(:name?, 'error', 'ok') }
+update:
+- res =
+    http post { '/not_decode_request_insert_test' }
+      http get {'/not_decode_request_insert_test', '?', 'value' name }
+- :res
+```
+
+```yaml
+name: form_urlencoded_test
+table:
+api: insert, get
+fields:
+  - name
+  - surname
+get:
+  - res =
+      http post
+        {'/form_urlencoded_test'}
+        { :name name, :surname surname }
+        { 'Content-Type', 'application/x-www-form-urlencoded' }
+  - :res
+insert:
+- status ok { :name || ' ' || :surname }
+```
+
+### Sending email and templates
+
+```yaml
+name: template_test1
+table:
+api: get, list, insert, update, delete
+fields:
+- name
+get:
+- template 'Hello {{name}}!'
+list:
+- template 'Hello {{title}}. {{name}}!' {:name name, 'Ms' title}
+insert:
+- template 'Hello {{name}}!' filename='file name'
+update:
+- template 'Hello {{name}} in {{action}}!' filename='file name' data={:name name, 'update' action}
+delete:
+- template 'Hello {{name}} in {{action}}!' data={:name name, 'delete' action}
+```
+
+```yaml
+name: email_test1
+table:
+api: get, insert
+fields:
+- attachment
+get:
+- attachment = { 'attachment from http for ' || trim(:name) }
+- :attachment
+insert:
+- file = to file {'attachment from file' attachment} 'file_attachment'
+- email
+    ({ 'a@a.a' 'to', 'Hannah' name } + { 'b@b.b' 'to', 'Baiba' name })
+    (template 'Subject for {{name}}!')
+    (template 'Content for {{recipient}}.' {trim(:name) recipient})
+    (http { '/email_test1', '?', :name name })
+    (file {:file.id, :file.sha_256})
+    (template 'Template attachment for {{name}}' {trim(:name) name} 'attachment name')
+```
+
+### Scala method call
+
+```yaml
+name: invocation_test_1
+table:
+api: get, save, count, delete, create
+fields:
+- s1
+- s2
+- n1
+- n2
+get:
+- setenv create this
+- s3 = org.wabase.QuereaseActionTestManager.concatStrings
+- status ok { :s3 }
+```
