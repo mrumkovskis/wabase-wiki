@@ -595,9 +595,9 @@ Any other properties can be added to view definition and are passed to view defi
 
 ## Actions
 
-In adition to default save, list and other behaviors developer can extend them or completely override them by providing custom code.
+In addition to default save, list and other behaviors developer can extend them or completely override them by providing custom code.
 
-Actions can be defined for folowing methods:
+Actions can be defined for following methods:
 
 * get - get single record
 * list - list array of records
@@ -637,12 +637,12 @@ Save action is defined for view by giving set of steps to complete action. Each 
 Awailable steps are:
 
 * Evaluation - evaluate expression (todo operation?) and assign it to variable in context (`name = :current_person_name`)
-* SetEnv - evaluate expression (todo operation?) and ovveride entire context were action is executed
+* SetEnv - evaluate expression (todo operation?) and override entire context where action is executed
 * Return - return value from action
 * Validations - validate data within context
 * RemoveVar - remove variable from context
 
-Within steps folowing operations can be used:
+Within steps following operations can be used:
 
 
 * tresql - execute tresql statement
