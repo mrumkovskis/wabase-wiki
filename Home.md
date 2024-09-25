@@ -26,7 +26,7 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * Quick start guide  (**TBD**)
   * Multi module projects
 * Reference guide
-  * Tresql documentation
+  * [Tresql documentation](https://github.com/mrumkovskis/tresql/blob/develop/docs/language-guide.md)
     * Introduction
     * API guide
     * Macros
