@@ -663,7 +663,7 @@ Within steps following operations can be used:
 * conf - read config parameter
 * json codec - encode or decode json
 * block - group of actions
-* job - **TODO** - what is this?
+* job - run predefined job. See [Scheduling](../misc/10_scheduling.md)
 * commit - commit transaction 
 
 ### Forming response
