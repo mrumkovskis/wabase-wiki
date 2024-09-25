@@ -41,8 +41,8 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * [Sbt mojoz documentation](misc/20_sbt_mojoz.md)
   * Authentication / Authorization  (**TBD**)
   * Scala classes (API guide)
-  * Rest client / wabase http client
-  * Renderers (pdf, excel, csv, json)
+  * [Rest client / wabase http client](misc/50_clients.md)
+  * [Renderers (pdf, excel, csv, json)](misc/60_renderers.md)
   * File upload / download / cleanup
   * Configuration reference
 * Tests
