@@ -43,6 +43,7 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * Scala classes (API guide)
   * [Rest client / wabase http client](misc/50_clients.md)
   * [Renderers (pdf, excel, csv, json)](misc/60_renderers.md)
+  * [Web sockets, Server-Sent Events , deferred responses](misc/70_deferred.md)
   * File upload / download / cleanup
   * Configuration reference
 * Tests

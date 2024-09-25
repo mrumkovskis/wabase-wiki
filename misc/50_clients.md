@@ -1,6 +1,8 @@
 # RestClient
 
 Wabase provides helper methods to make rest calls. RestClient is a simple wrapper around akka-http client.
+It can be used for automated testing and for creating integration with other services.
+
 
 In most cases two methods are used: `get` and `post`. Both methods return `Future[R]`, 
 if `FromResponseUnmarshaller[R]` is provided and take `String` url and parameters.
@@ -152,3 +154,49 @@ For marshalling responses to other formats see [Renderers Section](60_renderers.
 
 
 # WabaseHttpClient
+
+`WabaseHttpClient` is extension of `RestClient` that provides additional methods for working with wabase views.
+
+* `getDefaultApiHeaders(cookies: CookieMap)` - builds `X-Requested-With` and `X-XSRF-TOKEN` headers from cookie store
+* `login(username: String = defaultUsername, password: String = defaultPassword)` - basic auth login
+* `save[T <: DtoWithId](dto: T): T` - insert or update dto
+* `delete[T <: Dto](viewClass: Class[T], id: Long): Unit` - delete dto by id
+* `get[T <: Dto](viewClass: Class[T], id: Long, params: Map[String, Any] = Map.empty): T` - get dto by id
+* `list[T <: Dto](viewClass: Class[T], params: Map[String, Any]): List[T]`- get list of dtos
+* `count[T <: Dto](viewClass: Class[T], params: Map[String, Any]): Int` - get count of dtos
+
+Usage example:
+
+```scala
+
+import dto.CalHoliday
+import org.wabase.client.WabaseHttpClient
+import org.wabase.sDate
+
+
+object Test extends scala.App{
+   val client = new WabaseHttpClient{
+      override def actorSystemName = "core-client"
+   }
+
+   def updateHoliday(id: Long, holiday: sDate, name: String, description: String) = {
+      val document = client.get(classOf[CalHoliday], id)
+      document.holiday = holiday
+      document.name = name
+      document.description = description
+      client.save(document)
+   }
+
+   updateHoliday(1, new sDate(2021, 1, 1), "New Year", "New Year's Day")
+}
+```
+
+`WabaseHttpClient` also supports deferred responses. For more information see [Deferred Responses](70_deferred.md) 
+To enable deferred response handling, web socket needs to be opened:
+
+```scala
+val client = new WabaseHttpClient{
+   override def actorSystemName = "core-client"
+   listenToWs(deferredActor)
+}
+```
