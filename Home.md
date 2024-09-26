@@ -44,7 +44,7 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * [Rest client / wabase http client](misc/50_clients.md)
   * [Renderers (pdf, excel, csv, json)](misc/60_renderers.md)
   * [Web sockets, Server-Sent Events , deferred responses](misc/70_deferred.md)
-  * File upload / download / cleanup
+  * [File upload / download / cleanup](misc/80_files.md)
   * Configuration reference
 * Tests
   * Yaml business scenarios

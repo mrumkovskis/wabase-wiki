@@ -16,7 +16,7 @@ We are going to use Swagger to send different HTTP requests to a local wabase se
 
 ### Step 1: Get the code
 
-First, pull the project from [https://github.com/nikitajegorovs](https://github.com/nikitajegorovs)
+First, pull the project from [wabase-bank](https://github.com/muntis/wabase-bank)
 
 ```bash
 git pull

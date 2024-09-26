@@ -19,6 +19,8 @@ for more information for available actions.
 
 **TODO** Could not find information how to schedule the job.
 
+> If job is scheduled then context initially is empty, if called from view, then context is filled with view context.
+
 In addition to scheduling jobs, they can be run manually in view action with 'job' operation.
 
 ```yaml

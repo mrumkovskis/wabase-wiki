@@ -6,6 +6,8 @@ business logic. Views are used to define how data is presented, saved, deleted.
 Where possible view definition is implied and generated from table definition (see [Table definition](ref/20_tabledef.md)) 
 and function signatures (see [Function signatures](ref/14_function_signatures.md)).
 
+**TODO** talk about keys
+
 ## General  structure
 
 [Yaml 1.2](https://yaml.org/spec/1.2/) syntax is used for view metadata, but some keys and values are further parsed by mojoz and empty line is used as delimiter.
@@ -268,6 +270,10 @@ fields:
 ```
 
 **TODO** List all shortcut syntaxes for calculated fields
+
+> bank_id nevajag rakstīt ja forenā kāja saucas "code" + "_id"
+> "_" ir shorthand priekš ":code"
+> Vēl ir "dati json = -> = _" gadijums, varbūt strādā tapēc ka nav tāda "dati_id"
 
 #### Field properties
 
@@ -600,9 +606,8 @@ Actions can be defined for following methods:
 * get - get single record
 * list - list array of records
 * save - save record
-* insert - insert record
-* update - update record
-* upsert - insert or update record
+* insert - insert record, if defined both save and insert, then insert is used for insert and save for update **TODO** test this
+* update - update record, if defined both save and update, then update is used for update and save for insert **TODO** test this
 * delete - delete record
 * create - create record
 * count - count number of records
@@ -627,44 +632,45 @@ save:
 
 In this case, save action is used to override values of fields `name` and `sex` and then save record.
 
-Save action is defined for view by giving set of steps to complete action. Each step is executed in order and can modify context in which action is executed. 
+Save action is defined for view by giving set of steps to complete action. Each step is executed in declared order and can modify context in which action is executed. 
 
 
 **TODO** add inline examples 
 
 Awailable steps are:
 
-* Evaluation - evaluate expression (todo operation?) and assign it to variable in context (`name = :current_person_name`)
-* SetEnv - evaluate expression (todo operation?) and override entire context where action is executed
-* Return - return value from action
-* Validations - validate data within context
-* RemoveVar - remove variable from context
+* Evaluation - evaluate operation and assign it to variable in context (`name = :current_person_name`), **TODO** by default all operations are evaluations without assignment
+* SetEnv - evaluate operation and override entire context where action is executed (`setenv {"JOHN" name, "DOE" surname}`)
+* Return - return value from action (`return unique {"1234565" account_number}`), also terminates action if used in if block 
+* Validations - validate data within context 
+* RemoveVar - remove variable from context (`name -=`)
 
 Within steps following operations can be used:
 
 
-* tresql - execute tresql statement
-* view call - do action for another view
-* redirect - redirect to another view
-* unique - **TODO** - what is this?
-* invocation - **TODO** - what is this?
-* status - return http status code
-* variable transforms - **TODO** - what is this?
+* tresql - execute tresql statement (`time = now()`)
+* view call - do action for another view (`res = save person`)
+* status - return http status code (`status ok {"Happy hour"}`, `status { 303, '/data', 'path', :status }`)
+* redirect - redirect to another view, creates status 303 with location (`redirect {'person_health', :name, :manipulation_date::date, '?', 'val1' par1, 'val2' par2 }` creates location - `person_health/John/2020-01-01?val1=par1&val2=par2`)
+* unique - extracts unique record from list, otherwise throws error (`person = unique { 'John' name, 'Doe' surname }`)
+* unique_opt - extracts unique record from list, otherwise returns null (`person = unique_opt { 'John' name, 'Doe' surname }`)
+* invocation - call scala or java method (`res = org.wabase.QuereaseActionTestManager.concatStrings`)
+* variable transforms - assign value to variable (`return (count = :c) + (data = :d)`)
 * foreach - foreach loop block
 * if, else - if else blocks
-* resource - **TODO** - what is this?
-* file - **TODO** - what is this?
-* to file - **TODO** - what is this?
-* template - ganerate template
-* email - send email
-* http - make http call
-* http header - **TODO** - what is this?
-* db - **TODO** - what is this?
-* conf - read config parameter
-* json codec - encode or decode json
+* resource - reads file from classpath as `akka.util.ByteString` (`template = resource 'templates/person_template.txt'`)
+* file - reads file from file streamer as `akka.util.ByteString` (`template = file 'templates/person_template.txt'`), see [File streamer](../misc/80_files.md) for more details
+* to file - writes file to file streamer (`to file accounts{number} 'account_numbers' 'application/json'`), see [File streamer](../misc/80_files.md) for more details
+* template - generate template (`template 'Hello {{name}}!'`)
+* email - sends email (`email ({'foo@bar.com' 'to', 'FOO', name}) (template 'Hello') (template 'Hello {{name}}!')`)
+* http - make http call (`res = http get {'/not_decode_request_insert_test', '?', 'value' name }`)
+* http header - extracts header from original request (`header = extract header X-Forwarded-For`)
+* db - can open connection to database if connections are not initialized by setting flag `explicit db: true`, (`transaction save this`) **TODO** document "explicit db"
+* conf - read config parameter (`app_name = conf string app.name`) **TODO** document "conf"
+* json codec - encode or decode json (`person_object = from json :json_string`) (`json_string = to json :person_object`)
 * block - group of actions
-* job - run predefined job. See [Scheduling](../misc/10_scheduling.md)
-* commit - commit transaction 
+* job - run predefined job. (`job_res = job test_job`) See [Scheduling](../misc/10_scheduling.md)
+* commit - commit transaction  (`commit`)
 
 ### Forming response
 
@@ -803,18 +809,18 @@ save:
   - save this
 ```
 
-**TODO** how to forward parameters to view call?
+**TODO** how to forward parameters to view call?, Martins thinks that it will work
 
 ```yaml
 name: do_audit
-table: 
+table: audit
 fields:
   - id 
   - data
   - timestamp
 save:
   - timestamp = now()
-  - audit {id, data} + :this
+  - save this
     
 name: persona
 extends: persona_base
@@ -822,7 +828,7 @@ fields:
   - surname
   - birthdate
 save:
-  - save do_audit
+  - (data = :surname) -> save do_audit
   - save this
 ```
 
@@ -900,13 +906,11 @@ delete:
 Http call can be made based on action context and result can be used in further steps.
 Following parameters can be provided:
 
+* conformTo - expected response (`as forest`) **TODO** 
 * method - http method (`get`, `post`, `put`, `delete`)
 * url - tresql expression that returns url
-* headers - optional, tresql expression that returns headers
 * body - optional, tresql expression that returns body
-* conformTo - optional, tresql expression that returns expected response
-
-**TODO** - can we change order of parameters? in this example body is first then headers
+* headers - optional, tresql expression that returns headers
 
 ```yaml
 name: form_urlencoded_test
@@ -946,6 +950,19 @@ update:
 - :res
 ```
 
+```yaml
+name: forest
+table: forest
+key: nr
+api: get, save, list
+fields:
+- nr
+- owner = owner.name -> = owner[name = _] {id}
+- area
+- trees
+save:
+- save this as forest http { '/http_forest', '?', :nr nr, :owner owner, :area area, :trees trees }
+```
 ### Sending email and templates
 
 Template generates text from template string and variables by using mustache templating language.  
@@ -953,7 +970,11 @@ By default, it uses context variables, but it can be provided with specif contex
 
 **TODO** what is filename?
 
+> Ja maršalējam tad varam atgriezt file name iekš content-disposition headera
+
 **TODO** Can I change template language?
+
+> varam nomainīt, template engine jāpameklēt
 
 ```yaml
 name: template_test1
@@ -975,12 +996,17 @@ delete:
 
 To send email you must provide following parameters:
 
-* emailTresql - tresql select statement that returns data for email (**TODO** - can we return multiple rows?)
+(**TODO** - can we return multiple rows?) 
+> > jā, bet varbūt vajag email batch operāciju lai netīšām nenosūta visai datubāzei epastus un defaultais email met eroru ja vairāk kā viena rinda
+
+* emailTresql - tresql select statement that returns data for email 
 * subject - subject string for email, the example contains template
 * body - body string for email, the example contains template
 * attachmentsOp - optional list of attachments
 
 **TODO** why there are more parameters in example than in description?
+> pēc bodija pārējie parametri ir atačmenti
+
 
 ```yaml
 name: email_test1
@@ -1028,6 +1054,15 @@ Additional parameters can be specified as well:
 * Resources - tresql resources object to get connection to db
 * **TODO** - expand, did not find any examples
 
+>     (classOf[Resources], _ => resFac.resources),
+>        (classOf[ResourcesFactory], _ => resFac),
+>        (classOf[ExecutionContext], _ => ec),
+>        (classOf[ActorSystem], _ => as),
+>        (classOf[FileStreamer], _ => fs),
+>        (classOf[HttpRequest], _ => Option(reqCtx).map(_.request).orNull),
+>       (classOf[RequestContext], _ => reqCtx),
+>        (classOf[AppQuereaseIo[Dto]], _ => qio),
+
 Parameters can be defined as implicit or not.
 
 Result of method can be: 
@@ -1037,6 +1072,52 @@ Result of method can be:
 * DTO - dto generated by querease
 * `Any` - any primitive can be used as single value in view definition
 * `Future[_]` - future of the above, view will wait for future to complete 
+
+> full list:
+> 
+```scala
+
+def comp_q_result(r: Any) = {
+val allowAny = op.conformTo.exists(_.viewName == null)
+def qresult(r: Any): QuereaseResult = r match {
+case null | () => NoResult // reflection call on function with Unit (void) return type returns null
+case r: Result[_] => TresqlResult(r)
+case r: RowLike => TresqlSingleRowResult(r)
+case l: Long => LongResult(l)
+case s: String => StringResult(s)
+case n: java.lang.Number => NumberResult(n)
+case d: Dto => MapResult(d.toMap(this))
+case o: Option[Dto]@unchecked => o.map(d => MapResult(d.toMap(this))).getOrElse(notFound)
+case h: HttpResponse => HttpResult(h)
+case q: QuereaseResult => q
+// view compatible collections if not allow any
+case i: Iterator[_] if !allowAny => IteratorResult(i.map {
+case m: Map[String, Any]@unchecked => m
+case m: java.util.Map[String, Any]@unchecked => m.asScala.toMap
+case d: Dto => d.toMap(this)
+case x => wrongRes(x)
+})
+case m: Map[String, Any]@unchecked if !allowAny => MapResult(m)
+case l: Iterable[_] if !allowAny => qresult(l.iterator)
+// view compatible collections if not allow any for java types
+case m: java.util.Map[_, _] => qresult(m.asScala.toMap)
+case i: java.lang.Iterable[_] => qresult(i.asScala)
+case i: java.util.Iterator[_] => qresult(i.asScala)
+case a: Array[_] => qresult(a.iterator)
+//any res
+case x if allowAny => (x match { // convert dto(s) in collections to map for json encoder
+case v: Map[_, _] => v
+case v: Iterable[_] => qresult(v.iterator)
+case v: Iterator[_] => v.map {
+case d: Dto => d.toMap(this)
+case v => v
+}
+case v => v
+}) match {
+case v: AnyResult => v
+case v => AnyResult(v)
+}
+``` 
 
 **TODO** - Explain how result is assigned to view context (`s3 =` vs `set env` vs `return`)
 
@@ -1053,7 +1134,15 @@ def personSaveJavaMapBizMethod(data: java.util.Map[String, Any])
 def personSaveBizMethod(data: PersonSaveDto): Future[PersonSaveDto]
 ```
 
+
+**TODO** explain `- :x -> org.wabase.QuereaseActionTestManager.seqMethod`
+
+>  ar -> mēs padodam argumentus, bet bez -> mēs padodam visu kontekstu 
+
 **TODO** What is `as` statement? :
+ 
+> kāsto uz kādu dto vai listu ar dto 
+
 ```yaml
 get:
 - as any org.wabase.QuereaseActionTestManagerObj.int_array # no special type
@@ -1090,11 +1179,18 @@ validations:
   - ac(# c) { accounts {count(*)} }, (ac{c}) > 0, "person must have at least one account"
 ```
 
+> mums tiai var būt: 
+> * build kursors
+> * tuple, nosacijums un kļūdas ziņojums
+> * triple - tresql, nosacijums un kļūdas ziņojums
+
 **TODO** `build cursors` again
 
 Or can be specified within action. In this case each validation block can be named. 
 **TODO** - where that name can be used?  
 
+> mēs erorā saņēmam name kā key un tad varam programatoriski darīt lietas
+> 
 ```yaml
 name: payment
 api: save, get
