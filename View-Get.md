@@ -35,8 +35,10 @@ fields:
 - date_of_birth
 comment: This view gives primary information about user data.
 ```
-> SELECT id, name, surname, sex, date_of_birth FROM users
 
+```sql
+SELECT id, name, surname, sex, date_of_birth FROM users
+```
 
 We are going to use the example above and slowly add different settings to show various features of the `list-API`.
 
@@ -67,7 +69,9 @@ fields clause can be directly compared to sql select clause. So, if we use this 
 look like this:
 
 
-> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users
+```sql
+SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users
+```
 
 #**TODO**
 -Fields primitive structure - Value
@@ -157,7 +161,9 @@ order: name
 comment: This view provides list of users with basic information about each ordered by name.
 ```
 
-> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users ORDER BY name;
+```sql
+SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users ORDER BY name;
+```
 
 **#TODO** Ordering. Can be done by requested fields or any db field?
 **#TODO** What are other ordering options
@@ -180,10 +186,11 @@ fields:
 group: country_code
 comment: This view provides list of banks with basic information about each grouped by country.
 ```
->SQL Translation
->```sql
->SELECT id, name, code, country_code FROM banks GROUP BY country_code;
->```
+SQL Translation:
+
+```sql
+SELECT id, name, code, country_code FROM banks GROUP BY country_code;
+```
 
 **#TODO** Is there some default grouping
 
@@ -206,7 +213,10 @@ comment: This view gives primary information about user data with limit of 100 r
 
 Thus, the view above would be translated into the following sql request
 
-> SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users LIMIT 100;
+```sql
+SELECT id, CONCAT_WS(' ', name, surname) AS full_name, sex, date_of_birth FROM users LIMIT 100;
+``` 
+
 
 
 ### Joins section
