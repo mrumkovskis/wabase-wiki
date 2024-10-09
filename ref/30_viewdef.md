@@ -671,6 +671,7 @@ Within steps following operations can be used:
 * block - group of actions
 * job - run predefined job. (`job_res = job test_job`) See [Scheduling](../misc/10_scheduling.md)
 * commit - commit transaction  (`commit`)
+* extract parts - extract request parts for manual processing (`res = extract parts`)
 
 ### Forming response
 
@@ -1057,6 +1058,8 @@ Additional parameters can be specified as well:
 * `org.wabase.FileStreamer` - file streamer to read and write files
 * `org.wabase.RequestContext` - request context with parsed user, params ar view name
 * `org.wabase.AppQuereaseIo` - querease io object to make db calls and access metadata
+* `org.wabase.RequestPartResult` - part of request from `extract parts` statement
+
 
 Parameters can be defined in arbitrary order as implicit or not.
 
@@ -1118,6 +1121,58 @@ In this case `->` sign is used to pass variable `x` to method as map.
 ```yaml
 get:
 - as any org.wabase.QuereaseActionTestManagerObj.int_array # no special type
+```
+
+### Advanced request processing
+
+By default, HTTP POST and PUT requests are decoded and passed as Map of keys and values into context. 
+To switch off decoding and process request manually, set `decode request: false` in view definition.
+Multipart request can be decoded with `extract parts` statement, it returns list of `RequestPartResult` objects.
+
+`RequestPartResult` contains following fields:
+
+* `name` - name of part
+* `contentType` - content type of part
+* `filename` - filename of part
+* `data` - data of part as `akka.stream.scaladsl.Source[ByteString, Any]`
+
+Example of extracting parts:
+
+```yaml
+name: extract_parts_test
+decode request: false
+table:
+key: none
+api: insert, update
+fields:
+- none
+  insert:
+- res = extract parts
+- as any
+  { 'field1' name, :res.field1 value } ++
+  { 'field2' name, :res.field2 value } ++
+  { :res.file1.filename name, :res.file1.sha_256 value } ++
+  { :res.file2.filename name, :res.file2.sha_256 value }
+  update:
+- res = extract parts
+- as any unique { :res.filename file, :res.sha_256 sha_256 }
+```
+
+**TODO** none key is not needed, but it is needed for now
+
+`RequestPartResult` can be passed to scala class method as well:
+
+```yaml
+name: extract_parts_test2
+decode request: false
+table:
+api: insert
+insert:
+- as any org.wabase.QuereaseActionTestManagerObj.processRequestParts extract parts
+```
+
+```scala
+def processRequestParts(res: RequestPartResult)(implicit as: ActorSystem, ec: ExecutionContext)
 ```
 
 ## Validations
@@ -1186,3 +1241,4 @@ save:
 - =account[number = :beneficiary] { balance, last_modified } [balance + :amount, :time]
 - :id
 ```
+
