@@ -28,8 +28,8 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
   * [Tresql documentation](https://github.com/mrumkovskis/tresql/blob/develop/docs/language-guide.md)
     * Introduction
     * API guide
-    * Macros
-    * [function signatures](ref/14_function_signatures.md)
+    * [Macros](ref/13_macros.md)
+    * [Function signatures](ref/14_function_signatures.md)
   * [Table definition](ref/20_tabledef.md)
     * MD conventions
     * Multi db support
