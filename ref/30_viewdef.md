@@ -8,6 +8,8 @@ and function signatures (see [Function signatures](ref/14_function_signatures.md
 
 **TODO** talk about keys
 
+**TODO** sort -> order
+
 ## General  structure
 
 [Yaml 1.2](https://yaml.org/spec/1.2/) syntax is used for view metadata, but some keys and values are further parsed by mojoz and empty line is used as delimiter.
