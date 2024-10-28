@@ -1,5 +1,7 @@
 ## Table metadata
 
+**TODO should have type listing somewhere like - dateTime**
+
 Table metadata is typically loaded from YAML resource files bundled with application
 (see [YamlTableDefLoader](https://static.javadoc.io/org.mojoz/mojoz_3/5.0.0/org/mojoz/metadata/in/YamlTableDefLoader.html)).
 Table metadata can also be extracted from
