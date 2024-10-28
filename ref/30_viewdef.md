@@ -87,48 +87,63 @@ View name is used to identify view in the system. It is used in REST API calls a
 Name and alias of main table, may not be specified then view name is used.
 
 ```yaml
-name: user
-table: users u
-api: list, count
-fields: 
-    - id
-    - name
-    - surname
+name: bank_client
+table: client c
+api: manage_bank_clients list, manage_bank_clients count
+comments:
+  - List of bank clients with their details
+  - Must be accessible only to users with role `manage_bank_clients`
+fields:
+  - id
+  - name
+  - address
+  - phone
+  - email
+  - last_activity = greatest(date_created, date_updated, last_login) : Last activity
+  - initials = substring(name, 1, 1) || substring(surname, 1, 1) : Initials
 ```
 results in 
 
 ```sql
-select u.id, u.name, u.surname from users u
-```
+select 
+  c.id, 
+  c.name, 
+  c.address, 
+  c.phone, 
+  c.email, 
+  greatest(c.date_created,c.date_updated,c.last_login) as last_activity, 
+  substring(c.name,1,1) || substring(c.surname,1,1) as initials 
+from client c 
+limit 101
 
-but if table is not specified, then view name is used as table name
-
-```yaml
-name: user
-api: list, count
-fields: 
-    - id
-    - name
-    - surname
-```
-
-results in 
-
-```sql
-select user.id, user.name, user.surname from user
+select count(*) from client c
 ```
 
 ### Comments
 
 List of comments for view that can be included in api documentation or just document the code.
 
+```yaml
+name: user_list
+table: adm_user l
+api: logged_in_user list, logged_in_user count
+comments: List of users with their details
+```
 
-**TODO check if multiple comments are supported**
+comments can be multiline as well:
 
+```yaml
+name: bank_client
+table: client c
+api: manage_bank_clients list, manage_bank_clients count
+comments:
+  - List of bank clients with their details
+  - Must be accessible only to users with role `manage_bank_clients`
+```
 
 ### Api
 
-List of API methods supported by view. Possible values are:
+List of API methods supported by view and permission required. Possible values are:
 
 * list - list array of records, default rest path is `/data/{view_name}`
 * count - count number of records, default rest path is `/data/count/{view_name}` or `/data/count:{view_name}`
@@ -137,30 +152,59 @@ List of API methods supported by view. Possible values are:
 * delete - delete record, default rest path is `/data/{view_name}/{id}` DELETE
 * create - create record, default rest path is `/data/create/{view_name}` or `/data/create:{view_name}`
 
+```yaml
+name: bank_client
+table: client c
+api: manage_bank_clients list, manage_bank_clients count
+
+name: send_message
+table: messages m
+api: logged_in_user insert,  logged_in_user get
+comments: Send a message to another user
+
+name: sent_messages
+table: messages m
+api: logged_in_user list, logged_in_user count
+comments: List of messages sent by the logged in user
+```
+
 
 ### Auth
 
 Auth filter statement for horizontal data access control statement is added to where clause of select statement. 
 
 ```yaml
-name: book
-table: books b
-auth: b.owner_id = :auth_user_id  
-api: list, count, get, save, delete
+name: sent_messages
+table: messages m
+api: logged_in_user list, logged_in_user count
+auth list: sender_id = :current_user_id
+comments: List of messages sent by the logged in user
 fields:
   - id
-  - title
+  - receiver = ^message_receiver_choice.text
+  - subject
+  - message
+  - time
+  - is_read
+filter:
+  - message %~~~% :message_contains?
 ```
 
 results in 
 
 ```sql
-select b.id, b.title from books b where b.owner_id = :auth_user_id
+select m.id, 
+  (select u.name || ' ' || u.surname || ' (' || u.email || ')' as text from adm_user u where u.id = m.receiver_id) as receiver, 
+  m.subject, 
+  m.message, 
+  m.time, 
+  m.is_read 
+from messages m 
+where (sender_id = ?/*current_user_id*/) limit ?/*1*/
 
-delete from books where id = :id and owner_id = :auth_user_id
-
-update books set title = :title where id = :id and owner_id = :auth_user_id
+select count(*) from messages m where (sender_id = ?/*current_user_id*/)
 ```
+
 
 **TODO** - add insert statement
 
@@ -510,18 +554,19 @@ To make filter statements more expandable there are macros provided:
 * `if_defined` - if parameter is provided, then filter statement is included
 * `if_defined_or_else` - if parameter is provided, then filter statement is included, else other statement is included
 * `if_missing` - if parameter is not provided, then filter statement is included
+* `if_all_defined` - if all parameters are provided, then filter statement is included
+* `if_any_defined` - if any parameter is provided, then filter statement is included
+* `if_all_missing` - if all parameters are not provided, then filter statement is included
+* `if_any_missing` - if any parameter is not provided, then filter statement is included
 
 Examples:
 
-**TODO** - write better examples
-
 ```yaml
 filter:
-  - if_defined(:name, name + ' ' + surname like :name)
-  - if_defined_or_else(:name, 
-      name + ' ' + surname like :name,
-      deleted = false) 
-  - if_missing(:name, deleted = false)
+  - if_defined(:name_if_def, name = :name_if_def)
+  - if_defined_or_else(:name_if_def_or_else, name = :name_if_def_or_else, true)
+  - if_missing(:name_if_miss, true)
+  - if_all_defined(:name_if_all_def, :surname_if_all_def, name = :name_if_all_def & surname = :surname_if_all_def)
 ```
 
 ### Order
