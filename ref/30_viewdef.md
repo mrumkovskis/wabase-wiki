@@ -210,6 +210,8 @@ select count(*) from messages m where (sender_id = ?/*current_user_id*/)
 
 It is possible to specify separate auth statement for each api method
 
+**TODO test this example**
+
 ```yaml
 name: book
 table: books b
@@ -220,6 +222,8 @@ auth delete: b.owner_id = :auth_user_id & has_role('admin', :auth_user_id)
 ### Joins
 
 Collection of join statements in tresql syntax. 
+
+**TODO test this example**
 
 ```yaml
 name: book
@@ -246,6 +250,8 @@ join genre g on b.genre_id = g.id
 
 List of fields withing the view.
 
+**TODO test this example**
+
 ```yaml
 name: user
 table: users u
@@ -258,6 +264,8 @@ fields:
 In this case type of field is inferred from table definition.
 
 If needed field type can be specified explicitly:
+
+**TODO test this example**
 
 ```yaml 
 name: user
@@ -274,6 +282,8 @@ See [Column definition](20_tabledef.md) for more details on type definition.
 
 Calculated fields are fields that are not directly mapped to table columns but are calculated from other fields.
 
+**TODO test this example**
+
 ```yaml
 name: user
 table: users u
@@ -284,6 +294,8 @@ fields:
 ```
 
 Calculated field can be used in save statement as well to store back value sent by client.
+
+**TODO test this example**
 
 ```yaml
 name: account
@@ -296,6 +308,8 @@ fields:
 ```
 
 Both expressions can be taken from separate view definitions
+
+**TODO test this example**
 
 ```yaml
 name: bank_choice
@@ -338,6 +352,9 @@ They can be marked as
 * `excluded` - not returned in interface
 
 For example,
+
+**TODO test this example**
+
 ```yaml
 fields:
   - code:
@@ -354,6 +371,8 @@ Can not be updated from browser, but can be updated from backend on insert.
 Specific case 'readonly: true' means both interfaces are readonly, these fields have the same access control. 
 In this example both fields are readonly for both interfaces.
 
+**TODO test this example**
+
 ```yaml
 fields:
   - code:
@@ -367,6 +386,8 @@ fields:
 
 Fields can be marked as sortable, which means they can be used in sort statement in list calls.
 
+**TODO test this example**
+
 ```yaml
 fields:
   - code:
@@ -377,6 +398,8 @@ fields:
 ##### Initial value
 
 Initial value statment can be provided. It will be called when view create api call is called:
+
+**TODO test this example**
 
 ```yaml
 fields:
@@ -394,6 +417,8 @@ Any other properties can be added to field definition and are passed to field de
 #### Substrcutures
 
 Fields can have nested structures that are defined in separate view definitions. 
+
+**TODO test this example**
 
 ```yaml
 name: user
@@ -429,6 +454,8 @@ Save will be able to save nested structure as well.
 
 If there is only one foreign key from users to address table, then it can be omitted:
 
+**TODO test this example**
+
 ```yaml
 name: user
 table: users u
@@ -445,6 +472,8 @@ fields:
 ```
 
 Substructure can be a list of structures as well:
+
+**TODO test this example**
 
 ```yaml
 name: book
@@ -487,6 +516,8 @@ Then json returned by get api call will have nested list of structures:
 Default behavior on save for nested list of structures is to delete all existing records and insert new ones.
 If you want to update existing records, specify it in view definition:
 
+**TODO test this example**
+
 ```yaml
 name: book
 table: books b
@@ -514,6 +545,8 @@ Filter section is used to filter records in list and count api calls.
 
 Developer can specify fields that can be used for filtering in list and count api calls:
 
+**TODO test this example**
+
 ```yaml
 name: user
 table: users u
@@ -528,6 +561,7 @@ filter:
 
 Custom filter statement can be provided as well:
 
+**TODO test this example**
 
 ```yaml
 name: user
@@ -541,6 +575,8 @@ filter:
 ```
 
 For custom statements developer if parameter is optional:
+
+**TODO test this example**
 
 ```yaml
 filter:
@@ -575,6 +611,8 @@ Order section is used to sort records in list and count api calls if user has no
 
 Example: 
 
+**TODO test this example**
+
 ```yaml
 name: user
 table: users u
@@ -594,6 +632,8 @@ select u.id, u.name, u.surname from users u order by u.name, u.surname
 ```
 
 Order can be specified in descending order as well:
+
+**TODO test this example**
 
 ```yaml
 name: user
@@ -615,6 +655,7 @@ select u.id, u.name, u.surname from users u order by u.name desc, u.surname
 
 Expressions can be used in order as well, and previously defined custom fields:
 
+**TODO test this example**
 
 ```yaml
 name: user
@@ -659,6 +700,8 @@ Actions can be defined for following methods:
 * count - count number of records
 
 Here is basic example of save action: 
+
+**TODO test this example**
 
 ```yaml
 name:     person
@@ -723,6 +766,8 @@ Within steps following operations can be used:
 
 Return statement:
 
+**TODO test this example**
+
 ```yaml
 name: person_list
 table: person
@@ -743,6 +788,8 @@ list:
 
 Response as option from list
 
+**TODO test this example**
+
 ```yaml
 name: purchase_get
 api: get
@@ -760,6 +807,8 @@ get:
 
 Returning variable as response:
 
+**TODO test this example**
+
 ```yaml
 name: invocation_test_1
 table:
@@ -776,6 +825,8 @@ get:
 ```
 
 Returning variable as response second example:
+
+**TODO test this example**
 
 ```yaml
 name: http_test_2
@@ -795,6 +846,8 @@ list:
 ```
 
 Redirect examples: 
+
+**TODO test this example**
 
 ```yaml
 name:   status_test_3
@@ -816,6 +869,8 @@ count:
 
 Example how to call view itself:
 
+**TODO test this example**
+
 ```yaml
 name: person_list
 table: person
@@ -835,6 +890,8 @@ list:
 ```
 
 **TODO** - is supper save action executed by default?
+
+**TODO test this example**
 
 ```yaml
 name: persona_base
@@ -857,6 +914,8 @@ save:
 ```
 
 **TODO** how to forward parameters to view call?, Martins thinks that it will work
+
+**TODO test this example**
 
 ```yaml
 name: do_audit
@@ -889,6 +948,8 @@ Within block context is changed to item in list, parent context can be accessed 
 
 **TODO** - should we talk about `build cursors`? 
 
+**TODO test this example**
+
 ```yaml
 name: foreach_test_1
 table: if_and_foreach_test ift
@@ -915,6 +976,8 @@ update:
 
 If block allows to create conditional blocks of statements. 
 If block contains else block as well then result can be returned from if block.
+
+**TODO test this example**
 
 ```yaml
 name: if_test_1
@@ -959,6 +1022,8 @@ Following parameters can be provided:
 * body - optional, tresql expression that returns body
 * headers - optional, tresql expression that returns headers
 
+**TODO test this example**
+
 ```yaml
 name: form_urlencoded_test
 table:
@@ -979,6 +1044,8 @@ insert:
 
 Example how to use response from http call to make another http call:
 
+**TODO test this example**
+
 ```yaml
 name: not_decode_request_insert_test
 table:
@@ -996,6 +1063,8 @@ update:
       http get {'/not_decode_request_insert_test', '?', 'value' name }
 - :res
 ```
+
+**TODO test this example**
 
 ```yaml
 name: forest
@@ -1023,6 +1092,8 @@ Template takes following parameters:
 * filename - optional filename for attachment, or content-disposition header
 * data - By default, it uses context variables, but it can be provided with specif context in `data` parameter.
 
+
+**TODO test this example**
 
 ```yaml
 name: template_test1
@@ -1054,6 +1125,8 @@ To send email you must provide following parameters:
 
 Following example sends email with three attachments: 
 
+**TODO test this example**
+
 ```yaml
 name: email_test1
 table:
@@ -1077,6 +1150,8 @@ insert:
 ### Scala method call
 
 Scala method may be called from view definition. 
+
+**TODO test this example**
 
 ```yaml
 name: persona
@@ -1143,6 +1218,8 @@ def personSaveBizMethod(data: PersonSaveDto): Future[PersonSaveDto]
 
 If parameter is defined as map then full context is passed to method. However specific variable can be passed instead:
 
+**TODO test this example**
+
 ```yaml 
 name: invocation_test_2
 table:
@@ -1164,6 +1241,8 @@ In this case `->` sign is used to pass variable `x` to method as map.
  
 > kāsto uz kādu dto vai listu ar dto 
 
+**TODO test this example**
+
 ```yaml
 get:
 - as any org.wabase.QuereaseActionTestManagerObj.int_array # no special type
@@ -1183,6 +1262,8 @@ Multipart request can be decoded with `extract parts` statement, it returns list
 * `data` - data of part as `akka.stream.scaladsl.Source[ByteString, Any]`
 
 Example of extracting parts:
+
+**TODO test this example**
 
 ```yaml
 name: extract_parts_test
@@ -1207,6 +1288,8 @@ fields:
 **TODO** none key is not needed, but it is needed for now
 
 `RequestPartResult` can be passed to scala class method as well:
+
+**TODO test this example**
 
 ```yaml
 name: extract_parts_test2
@@ -1234,6 +1317,8 @@ Within validation block following operations can be used:
 * tuple - where first element is tresql statement that returns boolean value, second is error message
 * triple - where first element is tresql statement that prepares data for second element,  second element is tresql statement that returns boolean value, third is error message
 
+**TODO test this example**
+
 ```yaml
 name: person
 api: save, get
@@ -1260,6 +1345,8 @@ Or can be specified within action. In this case each validation block can be nam
 In this case validation block can be named and it can be used programmatically in code to generate proper response .
 
 **TODO** - examples of name in response
+
+**TODO test this example**
 
 ```yaml
 name: payment
