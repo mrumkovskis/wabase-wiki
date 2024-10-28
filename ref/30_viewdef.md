@@ -87,7 +87,7 @@ View name is used to identify view in the system. It is used in REST API calls a
 Name and alias of main table, may not be specified then view name is used.
 
 ```yaml
-name: bank_client
+name: bank_client_list
 table: client c
 api: manage_bank_clients list, manage_bank_clients count
 comments:
@@ -133,7 +133,7 @@ comments: List of users with their details
 comments can be multiline as well:
 
 ```yaml
-name: bank_client
+name: bank_client_list
 table: client c
 api: manage_bank_clients list, manage_bank_clients count
 comments:
@@ -153,7 +153,7 @@ List of API methods supported by view and permission required. Possible values a
 * create - create record, default rest path is `/data/create/{view_name}` or `/data/create:{view_name}`
 
 ```yaml
-name: bank_client
+name: bank_client_list
 table: client c
 api: manage_bank_clients list, manage_bank_clients count
 
@@ -168,6 +168,25 @@ api: logged_in_user list, logged_in_user count
 comments: List of messages sent by the logged in user
 ```
 
+If api is set to empty then view is not accessible via REST API directly, but can be used in other views.:
+
+```yaml
+name: bank_account_list
+table: account a
+api:
+fields:
+  - id
+  - balance
+  - currency
+
+name: bank_client
+table: client c
+fields:
+  - id
+  - name
+  - surname
+  - accounts * bank_account_list:
+```
 
 ### Auth
 
@@ -176,8 +195,9 @@ Auth filter statement for horizontal data access control statement is added to w
 ```yaml
 name: sent_messages
 table: messages m
-api: logged_in_user list, logged_in_user count
+api: logged_in_user list, logged_in_user count, logged_in_user delete
 auth list: sender_id = :current_user_id
+auth delete: sender_id = :current_user_id & is_read = false
 comments: List of messages sent by the logged in user
 fields:
   - id
@@ -203,20 +223,59 @@ from messages m
 where (sender_id = ?/*current_user_id*/) limit ?/*1*/
 
 select count(*) from messages m where (sender_id = ?/*current_user_id*/)
+
+delete from messages m where id = 125 and ((sender_id = 8 and is_read = false))
 ```
 
-
-**TODO** - add insert statement
-
-It is possible to specify separate auth statement for each api method
-
-**TODO test this example**
+This works for insert and update as well:
 
 ```yaml
-name: book
-table: books b
-auth list count : b.owner_id = :auth_user_id
-auth delete: b.owner_id = :auth_user_id & has_role('admin', :auth_user_id) 
+name: bank_account
+table: account a
+api: manage_bank_clients list, manage_bank_clients count, manage_bank_clients get, manage_bank_clients save, manage_bank_clients delete
+auth save delete: exists(client_manager cm[cm.client_id = a.client_id & cm.user_id = :current_user_id]{1})
+comments:
+  - List of bank accounts with their details
+  - Must be accessible only to users with role `manage_bank_clients`
+fields:
+  - id
+  - client_id
+  - balance [+]:
+      - field api: readonly
+  - currency
+  - type
+  - date_created [+]:
+      - field api: readonly
+  - date_closed
+insert:
+  - date_created = now()
+  - balance = 0.0
+  - insert this
+```
+
+results into:
+
+```sql
+insert into account (client_id, balance, currency, type, date_created, date_closed, id) 
+select a.client_id, a.balance, a.currency, a.type, a.date_created, a.date_closed, a.id 
+from (select 
+  157::bigint as client_id, 
+  0.0::numeric(12, 2) as balance, 
+  'USD'::text as currency, 
+  'SAVINGS'::text as type, 
+  '2024-10-28 12:35:08.982312'::date as date_created, 
+  null::date as date_closed, 
+  '<seq value>'::bigint as id limit 1
+  ) a 
+where (exists(select 1 from client_manager cm where cm.client_id = a.client_id and cm.user_id = 8))
+
+update account a set 
+  client_id = 157, 
+  currency = 'USD', 
+  type = 'SAVINGS', 
+  date_closed = null 
+where id = 174 
+and ((exists(select 1 from client_manager cm where cm.client_id = a.client_id and cm.user_id = 8)))
 ```
 
 ### Joins
@@ -338,6 +397,9 @@ fields:
 Beside field name and type, field properties can be specified as well. 
 
 ##### Access control
+
+**FIXME field db removed, [!]  [+]** 
+
 For access control, fields can be fine-tuned: 
 Wabase defines two interfaces for fields: 
 
