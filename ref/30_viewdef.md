@@ -397,30 +397,33 @@ joins:
 
 List of fields withing the view.
 
-**TODO test this example**
-
 ```yaml
-name: user
-table: users u
+name: bank_client
+table: client c
 fields:
-    - id
-    - name
-    - surname
+  - id
+  - name
+  - surname
+  - address
+  - phone
+  - email
 ```
 
-In this case type of field is inferred from table definition.
+In this case, a type of field is inferred from table definition.
 
-If needed field type can be specified explicitly:
+If a necessary field type can be specified explicitly:
 
-**TODO test this example**
-
-```yaml 
-name: user
-table: users u
+```yaml
+name: bank_client
+table: client c
 fields:
-    - id       integer
-    - name     string
-    - surname  string
+  - id        integer
+  - name      string
+  - surname   string
+  - address   string
+  - phone     string
+  - email     string
+  - balance   balance = (account a[a.client_id = c.id]{sum(a.balance)}) : Total balance 
 ```
 
 See [Column definition](20_tabledef.md) for more details on type definition.
@@ -429,18 +432,27 @@ See [Column definition](20_tabledef.md) for more details on type definition.
 
 Calculated fields are fields that are not directly mapped to table columns but are calculated from other fields.
 
-**TODO test this example**
-
 ```yaml
-name: user
-table: users u
+name: bank_client
+table: client c
 fields:
-    - id
-    - full_name   = concat_ws(' ', u.name, u.surname)
-    - age integer = date_part('year', now()) - date_part('year', u.date_of_birth) 
+  - id        integer
+  - balance   balance = (account a[a.client_id = c.id]{sum(a.balance)}) : Total balance 
 ```
 
-Calculated field can be used in save statement as well to store back value sent by client.
+```yaml
+name: message_receiver_choice
+table: adm_user u
+api: logged_in_user list
+comments: List of users for user selection
+fields:
+  - id
+  - text = u.name || ' ' || u.surname || ' (' || u.email || ')'
+filter:
+  - ^text %~~~% :text?
+```
+
+Calculated field can be used in a save statement as well to store back value sent by client.
 
 **TODO test this example**
 
@@ -456,22 +468,31 @@ fields:
 
 Both expressions can be taken from separate view definitions
 
-**TODO test this example**
-
 ```yaml
-name: bank_choice
-table: bank b
+name: message_receiver_choice
+table: adm_user u
+api: logged_in_user list
+comments: List of users for user selection
 fields:
   - id
-  - text = concat_ws(' ', b.code, b.name)
+  - text = u.name || ' ' || u.surname || ' (' || u.email || ')'
+filter:
+  - ^text %~~~% :text?
 
-name: account
-table: account a
-joins: 
-  - a [account.bank_id = bank.id] bank
+name: send_message
+table: messages m
+api: logged_in_user insert,  logged_in_user get
+comments: Send a message to another user
 fields:
-- id
-- code = ^bank_choice.text -> = ^bank_choice[^text = _]{id}
+  - id
+  - receiver = ^message_receiver_choice.text -> = ^message_receiver_choice[^text = _]{id}
+  - sender_id:
+      - field api: excluded
+  - subject
+  - message
+save:
+  - sender_id = :current_user_id
+  - save this
 ```
 
 **TODO** List all shortcut syntaxes for calculated fields
@@ -482,7 +503,7 @@ fields:
 
 #### Field properties
 
-Beside field name and type, field properties can be specified as well. 
+Besides field name and type, field properties can be specified as well. 
 
 ##### Access control
 
@@ -534,20 +555,108 @@ fields:
 
 ##### Sorting
 
-Fields can be marked as sortable, which means they can be used in sort statement in list calls.
+Fields can be marked as sortable, which means they can be used in a sort statement in list calls.
+Do to possible risks of performance hit not all fields are sortable by default,
+only fields that are marked as sortable can be used in a sort statement.
 
-**TODO test this example**
+Given this example:
 
 ```yaml
+name: bank_client_list
+table: client c
+api: manage_bank_clients list, manage_bank_clients count
+comments:
+  - List of bank clients with their details
+  - Must be accessible only to users with role `manage_bank_clients`
 fields:
-  - code:
-    - sortable: true
+  - id
   - name:
+      - sortable: true
+  - address
+  - phone
+  - email:
+      - sortable: true
+  - last_activity = greatest(date_created, date_updated, last_login) :
+      - Last activity
+      - sortable: true
+  - initials = substring(name, 1, 1) || substring(surname, 1, 1) :
+      - Initials
+      - sortable: true
+order:
+  - id
 ```
 
+Calling:
+
+```http://localhost:8090/data/bank_client_list```
+
+Will result in:
+    
+```sql
+select c.id, c.name, c.address, c.phone, c.email, 
+  greatest(c.date_created,c.date_updated,c.last_login) as last_activity, 
+  substring(c.name,1,1) || substring(c.surname,1,1) as initials 
+from client c 
+order by id asc 
+limit 101
+```
+
+Calling 
+
+```http://localhost:8090/data/bank_client_list?sort=name```
+
+Will result in:
+
+```sql
+select c.id, c.name, c.address, c.phone, c.email, 
+  greatest(c.date_created,c.date_updated,c.last_login) as last_activity, 
+  substring(c.name,1,1) || substring(c.surname,1,1) as initials 
+from client c 
+order by name asc, id asc 
+limit 101
+```
+You can use multiple fields in sort statement:
+
+```http://localhost:8090/data/bank_client_list?sort=name,email```
+
+Will result in:
+
+```sql
+select c.id, c.name, c.address, c.phone, c.email, 
+  greatest(c.date_created,c.date_updated,c.last_login) as last_activity, 
+  substring(c.name,1,1) || substring(c.surname,1,1) as initials 
+from client c order by name asc, email asc, id asc 
+limit 101
+```
+
+You can use calculated fields in sort statement as well:
+
+```http://localhost:8090/data/bank_client_list?sort=last_activity```
+
+Will result in:
+
+```sql
+select c.id, c.name, c.address, c.phone, c.email, 
+  greatest(c.date_created,c.date_updated,c.last_login) as last_activity, 
+  substring(c.name,1,1) || substring(c.surname,1,1) as initial
+from client c order by last_activity asc, id asc 
+limit 101
+```
+
+But calling unsortable field will result in error:
+
+```http://localhost:8090/data/bank_client_list?sort=address```
+
+Will result in:
+
+```
+400
+Bad Request
+Not sortable: bank_client_list by address
+```
 ##### Initial value
 
-Initial value statment can be provided. It will be called when view create api call is called:
+Initial value statement can be provided. It will be called when view create api call is called:
 
 **TODO test this example**
 
