@@ -556,8 +556,8 @@ fields:
 ##### Sorting
 
 Fields can be marked as sortable, which means they can be used in a sort statement in list calls.
-Do to possible risks of performance hit not all fields are sortable by default,
-only fields that are marked as sortable can be used in a sort statement.
+Doe to possible risks of performance hit not all fields are sortable by default,
+user can request only fields that are marked as sortable.
 
 Given this example:
 
@@ -735,61 +735,61 @@ Substructure can be a list of structures as well:
 **TODO test this example**
 
 ```yaml
-name: book
-table: books b
+name: client_account
+table: account a
+api:
 fields:
   - id
-  - title
-  - authors * [b.id = ba.book_id]:
-      table: book_authors ba
-      fields:
-      - id
-      - name
-      - surname
-      - email
+  - number
+  - balance
+  - currency
+  - type
+  - date_created
+  - date_closed
+
+name: bank_client
+table: client c
+fields:
+  - id
+  - name
+  - surname 
+  - accounts * client_account:
 ```
 
 Then json returned by get api call will have nested list of structures:
 
 ```json
 {
-  "id": 1,
-  "title": "Book title",
-  "authors": [
+  "id": 31,
+  "name": "Ada",
+  "surname": "Lovelace",
+  "accounts": [
     {
-      "id": 1,
-      "name": "John",
-      "surname": "Doe",
-      "email": "jon@foo.com"
-    },
-    {
-      "id": 2,
-      "name": "Jane",
-      "surname": "Doe",
-      "email": "jane@foo.com"
+      "id": 36,
+      "number": "e8JptEWxkV",
+      "balance": 123123,
+      "currency": "USD",
+      "type": "SAVINGS",
+      "date_created": "2024-11-22",
+      "date_closed": null
     }
-    ]
+  ]
 }
 ```      
 
-Default behavior on save for nested list of structures is to delete all existing records and insert new ones.
+The Default behavior on save for nested lists of structures is to delete all existing records and insert new ones.
 If you want to update existing records, specify it in view definition:
 
 **TODO test this example**
 
 ```yaml
-name: book
-table: books b
+name: bank_client
+table: client c
 fields:
   - id
-  - title
-  - authors [+-=]* [b.id = ba.book_id]:
-      table: book_authors ba
-      fields:
-      - id
-      - name
-      - surname
-      - email
+  - name
+  - surname
+  - accounts [+-=]* client_account:
 ```
 
 Flags in brackets specify behavior on save:
@@ -797,6 +797,8 @@ Flags in brackets specify behavior on save:
 * `+` - insert new records
 * `-` - delete records
 * `=` - update records
+
+For this to work, the primary key of nested structure must be provided in view definition and sent back by client.
 
 ### Filter
 
