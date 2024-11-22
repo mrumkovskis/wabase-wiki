@@ -732,8 +732,6 @@ fields:
 
 Substructure can be a list of structures as well:
 
-**TODO test this example**
-
 ```yaml
 name: client_account
 table: account a
@@ -779,8 +777,6 @@ Then json returned by get api call will have nested list of structures:
 
 The Default behavior on save for nested lists of structures is to delete all existing records and insert new ones.
 If you want to update existing records, specify it in view definition:
-
-**TODO test this example**
 
 ```yaml
 name: bank_client
