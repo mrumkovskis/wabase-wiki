@@ -34,9 +34,7 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
     * MD conventions
     * Multi db support
   * [View definition](ref/30_viewdef.md)
-    * Basic structure
-    * Action
-    * Validation
+  * [View definition actions and validations](ref/40_viewdef_actions_and_validations.md)
   * [Scheduling](misc/10_scheduling.md)
   * [Sbt mojoz documentation](misc/20_sbt_mojoz.md)
   * Authentication / Authorization  (**TBD**)
