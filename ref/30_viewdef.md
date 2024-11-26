@@ -897,7 +897,7 @@ limit 101
 Question mark is used to specify that filter is optional. Marking optional parameters can only go so far,
 it only excludes statement parameter is used in.
 
-For example this **bad** example:
+For example, this **bad** example:
 
 ```yaml
 filter:
@@ -966,75 +966,90 @@ filter:
 
 ### Order
 
-Order section is used to sort records in list and count api calls if user has not provided fields that used in sorting.
+Order section is used to sort records in a list.
 
 Example: 
 
-**TODO test this example**
-
 ```yaml
-name: user
-table: users u
+name: sent_messages
+table: messages m
+api: logged_in_user list, logged_in_user count, logged_in_user delete
+auth list: sender_id = :current_user_id
 fields:
-    - id
-    - name
-    - surname
+  - id
+  - receiver = ^message_receiver_choice.text:
+      - sortable: true
+  - subject
+  - message
+  - time
+  - is_read
 order:
-    - name
-    - surname
+  - is_read
+  - ~time
 ```
 
-Result is 
+The Result is 
 
 ```sql
-select u.id, u.name, u.surname from users u order by u.name, u.surname
+select m.id, 
+(select u.name || ' ' || u.surname || ' (' || u.email || ')' as text from adm_user u where u.id = m.receiver_id) as receiver, 
+m.subject, 
+m.message, 
+m.time, 
+m.is_read, 
+from messages m 
+where (sender_id = 8) 
+order by is_read asc, time desc limit 101
 ```
 
-Order can be specified in descending order as well:
+If a user provides a sort field, then it is added to the list of sort fields as priority:
 
-**TODO test this example**
+```http://localhost:8090/data/sent_messages?sort=receiver```
 
-```yaml
-name: user
-table: users u
-fields:
-    - id
-    - name
-    - surname
-order:
-    - ~name
-    - surname
-```
-
-Result is 
+results in: 
 
 ```sql
-select u.id, u.name, u.surname from users u order by u.name desc, u.surname
+order by receiver asc, is_read asc, time desc
 ```
+
+`~` at the start of field name means descending order, otherwise ascending order is used. It can be added in parameters as well:
+
+
+```http://localhost:8090/data/sent_messages?sort=~receiver```
+
+results in:
+
+```sql
+order by receiver desc, is_read asc, time desc
+```
+
 
 Expressions can be used in order as well, and previously defined custom fields:
 
-**TODO test this example**
-
 ```yaml
-name: user
-table: users u
+name: bank_client_list
+table: client c
 fields:
-    - id
-    - name
-    - surname
-    - age integer = date_part('year', now()) - date_part('year', u.date_of_birth)
+  - id
+  - name
+  - address
+  - phone
+  - email
+  - last_activity = greatest(date_created, date_updated, last_login)
+  - initials = substring(name, 1, 1) || substring(surname, 1, 1)
 order:
-    - ^age
-    - concat_ws(' ', u.name, u.surname)
+  - last_activity
+  - id
 ```
-Result is 
+
+The Result is 
 
 ```sql
-select u.id, u.name, u.surname from users u 
-order by 
-date_part('year', now()) - date_part('year', u.date_of_birth), 
-concat_ws(' ', u.name, u.surname)
+select c.id, c.name, c.address, c.phone, c.email, 
+greatest(c.date_created,c.date_updated,c.last_login) as last_activity, 
+substring(c.name,1,1) || substring(c.surname,1,1) as initials 
+from client c 
+order by last_activity asc, id asc limit 101
 ```
 
 ### Extended properties
