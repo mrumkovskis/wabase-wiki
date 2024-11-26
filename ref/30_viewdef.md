@@ -798,59 +798,161 @@ For this to work, the primary key of nested structure must be provided in view d
 
 ### Filter
 
-Filter section is used to filter records in list and count api calls. 
+The Filter section is used to filter records in a list and count api calls. 
 
-Developer can specify fields that can be used for filtering in list and count api calls:
-
-**TODO test this example**
+Developers can specify fields that can be used for filtering in a list and count api calls:
 
 ```yaml
-name: user
-table: users u
+name: sent_messages
+table: messages m
+api: logged_in_user list, logged_in_user count, logged_in_user delete
+auth list: sender_id = :current_user_id
 fields:
-    - id
-    - name
-    - surname
+  - id
+  - receiver = ^message_receiver_choice.text
+  - subject
+  - message
+  - time
+  - is_read
 filter:
-    - name
-    - surname
+  - is_read
 ```
+
+By default filter is not included in a select statement, but if a filter is provided in api call, then it is included:
+
+Query 
+```http://localhost:8090/data/sent_messages```
+
+Results in:
+
+```sql
+select 
+m.id, 
+(select u.name || ' ' || u.surname || ' (' || u.email || ')' as text from adm_user u where u.id = m.receiver_id) as receiver, 
+m.subject, 
+m.message, 
+m.time, 
+m.is_read, 
+from messages m 
+where (sender_id = 8) limit 101
+```
+
+But if filter is provided:
+
+```http://localhost:8090/data/sent_messages?is_read=true```
+
+Results in:
+
+```sql
+select 
+m.id, 
+(select u.name || ' ' || u.surname || ' (' || u.email || ')' as text from adm_user u where u.id = m.receiver_id) as receiver, 
+m.subject, 
+m.message, 
+m.time, 
+m.is_read, 
+from messages m 
+where (m.is_read = true) 
+and (sender_id = 8) limit 101
+```
+
+As it is with sorting fields,
+only fields that are marked as filterable can be used in a filter statement since it can cause performance issues.
+
 
 Custom filter statement can be provided as well:
 
-**TODO test this example**
-
 ```yaml
-name: user
-table: users u
+name: sent_messages
+table: messages m
+api: logged_in_user list, logged_in_user count, logged_in_user delete
+auth list: sender_id = :current_user_id
 fields:
-    - id
-    - name
-    - surname
+  - id
+  - receiver = ^message_receiver_choice.text
+  - subject
+  - message
+  - time
+  - is_read
 filter:
-    - name + ' ' + surname like :name
+  - message %~~~% :message_contains?
 ```
 
-For custom statements developer if parameter is optional:
+Results in:
 
-**TODO test this example**
+```sql
+select m.id, 
+(select u.name || ' ' || u.surname || ' (' || u.email || ')' as text from adm_user u where u.id = m.receiver_id) as receiver, 
+m.subject, 
+m.message, 
+m.time, 
+m.is_read, 
+from messages m 
+where 
+(lower(f_unaccent(message)) like '%' || lower(f_unaccent('hello')) || '%') 
+and (sender_id = 8) 
+limit 101
+```
+
+Question mark is used to specify that filter is optional. Marking optional parameters can only go so far,
+it only excludes statement parameter is used in.
+
+For example this **bad** example:
 
 ```yaml
 filter:
-    - name + ' ' + surname like :name?
+  - exists(adm_user a[a.id = m.receiver_id & a.email = :username?]{1})
 ```
 
-If parameter is not provided, then filter statement will not be included in select query.
+Results in:
 
-To make filter statements more expandable there are macros provided: 
+```sql
+where (exists(select 1 from adm_user a where a.id = m.receiver_id)) 
+```
 
-* `if_defined` - if parameter is provided, then filter statement is included
-* `if_defined_or_else` - if parameter is provided, then filter statement is included, else other statement is included
-* `if_missing` - if parameter is not provided, then filter statement is included
-* `if_all_defined` - if all parameters are provided, then filter statement is included
-* `if_any_defined` - if any parameter is provided, then filter statement is included
-* `if_all_missing` - if all parameters are not provided, then filter statement is included
-* `if_any_missing` - if any parameter is not provided, then filter statement is included
+or with parmeter:
+
+```http://localhost:8090/data/sent_messages?username=cm%40localhost```
+
+
+```sql
+where (exists(select 1 from adm_user a where a.id = m.receiver_id and a.email = 'cm@localhost'))
+```
+
+Proper way to remove an unnecessary filter statement in this case is to use `if_defined` macro:
+
+```yaml
+filter:
+  - if_defined(:username, exists(adm_user a[a.id = m.receiver_id & a.email = :username?]{1}))
+```
+
+Macros are called during sql creation and can be used to modify statement.
+Now when username is not provided, a filter statement is not included:
+
+```sql
+where (sender_id = 8) 
+limit 101
+```
+
+Query with parameter remains the same:
+
+
+```sql
+ where (exists(select 1 from adm_user a where a.id = m.receiver_id and a.email = 'cm@localhost')) 
+ and (sender_id = 8) 
+ limit 101
+```
+
+
+To make filter statements more expandable, there are more macros provided: 
+
+* `if_defined` - if parameter is provided, then a filter statement is included
+* `if_defined_or_else` - if parameter is provided, then a filter statement is included, else another statement is included
+* `if_missing` - if parameter is not provided, then a filter statement is included
+* `if_all_defined` - if all parameters are provided, then a filter statement is included
+* `if_any_defined` - if any parameter is provided, then a filter statement is included
+* `if_all_missing` - if all parameters are not provided, then a filter statement is included
+* `if_any_missing` - if any parameter is not provided, then a filter statement is included
 
 Examples:
 
