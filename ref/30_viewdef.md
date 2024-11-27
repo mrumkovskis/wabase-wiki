@@ -1054,7 +1054,64 @@ order by last_activity asc, id asc limit 101
 
 ### Extended properties
 
-Any other properties can be added to view definition and are passed to view definition in mojoz.
+Both view and field definitions can have extended properties that are passed to mojoz and are accessible in the code.
+This can be used to extend view functionality declaratively.
 
-**TODO** - add example
+First, extra fields must be declared when creating Querease. It is done in scala code: 
 
+```scala
+object App
+  extends AppBase[user_principal]
+...
+{
+
+  protected def initQuerease: org.wabase.AppQuerease = new org.wabase.AppQuerease {
+    override lazy val knownFieldExtras = KnownFieldExtras() + "can_copy"
+    override lazy val knownViewExtras = KnownViewExtras() + "can_copy"
+  }
+
+...
+}
+```
+
+Then in view definition, it can be used:
+
+```yaml
+name: classifier_item_choice
+table: classifier_item i
+api: logged_in_user list
+can_copy: true
+limit: 9999
+joins:
+  - i/classifier k
+fields:
+  - id
+  - code:
+      - can_copy: true
+  - name = i.name:
+      - can_copy: true
+  - cla_code = k.code
+  - code_sort = i.code_sort
+```
+
+And in scala code, it can be accessed in `extras: Map[String, Any]`:
+
+```scala
+// Lists all views that can be copied with all fields that can be copied
+App.qe.nameToViewDef.values.filter(_.extras.getOrElse("can_copy", false).asInstanceOf[Boolean]).foreach { v =>
+  logger.debug(s"View ${v.name} can be copied, with following fields: ")
+  v.fields.filter(_.extras.getOrElse("can_copy", false).asInstanceOf[Boolean]).foreach { f =>
+    logger.debug(s"Field ${f.name} can be copied")
+  }
+}
+```
+
+The Result is in the console:
+
+```log
+instance-api-1  | app 26.11.2024 12:32:39.573 DEBUG uniso.app.App  - View classifier_item_choice can be copied, with following fields: 
+instance-api-1  | app 26.11.2024 12:32:39.574 DEBUG uniso.app.App  - Field code can be copied
+instance-api-1  | app 26.11.2024 12:32:39.574 DEBUG uniso.app.App  - Field name can be copied
+```
+
+**TODO** - add example how viewDef class can be extended and don't need to use `extras`
