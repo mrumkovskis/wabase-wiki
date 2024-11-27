@@ -8,21 +8,12 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
 
 ---
 
-## Table of Contents
-* Introduction 
-  * [Home](Home.md)
-* View Definition
-  * [Intro](View-Intro.md)
-  * [View for get, list and count APIs](View-Get.md)
-  * [View for insert and update APIs](View-InsertUpdate.md)
-
-
-
-## TOC (wish list)
+## TOC
 
 * [Introduction](intro/00_intro.md)
   * [Sample project structure](intro/10_sample.md)
   * [Quick start guide](intro/20_quick_start.md)
+  * [Rest API overview](intro/30_rest_api.md)
   * Multi module projects
 * Reference guide
   * [Tresql documentation](https://github.com/mrumkovskis/tresql/blob/develop/docs/language-guide.md)
