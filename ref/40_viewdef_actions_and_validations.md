@@ -13,32 +13,30 @@ Actions can be defined for the following methods:
 * create - create record
 * count - count number of records
 
-Here is basic example of save action:
-
-**TODO test this example**
+Here is a basic example of save action:
 
 ```yaml
-name:     person
-api:      save
-table:    person
-auth get: :update_enabled = true
+name: bank_account
+table: account a
 fields:
-- id
-- name
-- sex
-- birthdate
-save:
-- name = :current_person_name
-- sex  = 'M'
-- save this
+  - id
+  - client_id
+  - number  [+]:
+  - balance [+]:
+      - field api: readonly
+  - currency
+  - type
+  - date_created [+]:
+      - field api: readonly
+  - date_closed
+insert:
+  - date_created = now()
+  - balance = 0.0
+  - insert this
 ```
 
-In this case, save action is used to override values of fields `name` and `sex` and then save record.
+In this case, insert action is used to set `date_created` and `balance` fields and then insert record. 
 
-Save action is defined for view by giving set of steps to complete action. Each step is executed in declared order and can modify context in which action is executed.
-
-
-**TODO** add inline examples
 
 Awailable steps are:
 
@@ -48,21 +46,20 @@ Awailable steps are:
 * Validations - validate data within context
 * RemoveVar - remove variable from context (`name -=`)
 
-Within steps following operations can be used:
-
+Within steps, the following operations can be used:
 
 * tresql - execute tresql statement (`time = now()`)
 * view call - do action for another view (`res = save person`)
 * status - return http status code (`status ok {"Happy hour"}`, `status { 303, '/data', 'path', :status }`)
 * redirect - redirect to another view, creates status 303 with location (`redirect {'person_health', :name, :manipulation_date::date, '?', 'val1' par1, 'val2' par2 }` creates location - `person_health/John/2020-01-01?val1=par1&val2=par2`)
-* unique - extracts unique record from list, otherwise throws error (`person = unique { 'John' name, 'Doe' surname }`)
+* unique - extracts unique record from a list, otherwise throws error (`person = unique { 'John' name, 'Doe' surname }`)
 * unique_opt - extracts unique record from list, otherwise returns null (`person = unique_opt { 'John' name, 'Doe' surname }`)
 * invocation - call scala or java method (`res = org.wabase.QuereaseActionTestManager.concatStrings`)
 * variable transforms - assign value to variable (`return (count = :c) + (data = :d)`)
 * foreach - foreach loop block
 * if, else - if else blocks
-* resource - reads file from classpath as `akka.util.ByteString` (`template = resource 'templates/person_template.txt'`)
-* file - reads file from file streamer as `akka.util.ByteString` (`template = file 'templates/person_template.txt'`), see [File streamer](../misc/80_files.md) for more details
+* resource - reads a file from classpath as `akka.util.ByteString` (`template = resource 'templates/person_template.txt'`)
+* file - reads a file from file streamer as `akka.util.ByteString` (`template = file 'templates/person_template.txt'`), see [File streamer](../misc/80_files.md) for more details
 * to file - writes file to file streamer (`to file accounts{number} 'account_numbers' 'application/json'`), see [File streamer](../misc/80_files.md) for more details
 * template - generate template (`template 'Hello {{name}}!'`)
 * email - sends email (`email ({'foo@bar.com' 'to', 'FOO', name}) (template 'Hello') (template 'Hello {{name}}!')`)
@@ -80,44 +77,79 @@ Within steps following operations can be used:
 
 Return statement:
 
-**TODO test this example**
+**TODO not the best example since we are forced to follow view model**
 
 ```yaml
-name: person_list
-table: person
+name: bank_account_list_with_count
+table:
+api: manage_bank_clients list
+comments: Returns list of page of bank accounts with total count
 fields:
-  - id
-  - name
-  - surname
-  - sex
-  - birthdate
-filter:
-  - name %~~%
-  - surname %~~%
+  - count: int
+  - data *:
+    table: account a
+    fields:
+      - id
+      - number
+      - balance
+      - currency
+      - type
+      - client_id
+      - date_created
+      - date_closed
+    order:
+      - id
+    filter:
+      - client_id
 list:
-  - c: count this   # named step supports also colon notation
-  - d: list  this   # named step supports also colon notation
+  - c: count bank_account_list_with_count_data
+  - d:   list bank_account_list_with_count_data
   - return (count = :c) + (data = :d)
 ```
 
-Response as option from list
-
-**TODO test this example**
+Response as option from a list, in this case custom select:
 
 ```yaml
-name: purchase_get
-api: get
-db: shop_db
-table: purchase
+name: bank_account_get_with_custom_select
+table: account a
+api: manage_bank_clients get
+comments: Bank account details with custom select
 fields:
-  - customer
-  - purchase_time
-  - item
-  - amount
+  - id
+  - number
+  - balance
+  - custom_field string =
 get:
-  - unique_opt |shop_db:purchase[purchase_time = :purchase_time & customer = :customer]
-    {item, amount}
+  - unique_opt account[id = :id] {id, number, balance, 'custom_value' custom_field}
 ```
+
+Unique option can be used from a list call:
+
+
+```yaml
+name: bank_account_list
+table: account a
+fields:
+  - id
+  - number
+  - balance
+filter:
+  - client_id
+
+name: bank_account_by_client
+table: account a
+api: manage_bank_clients get
+comments: Bank account details with unique option
+fields:
+  - id
+  - number
+  - balance
+get:
+  - client_id = :id
+  - unique_opt list bank_account_list
+```
+
+
 
 Returning variable as response:
 
