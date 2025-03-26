@@ -107,7 +107,7 @@ list:
   - return (count = :c) + (data = :d)
 ```
 
-Response as option from a list, in this case custom select:
+Response as option from a list, in this case from custom select:
 
 ```yaml
 name: bank_account_get_with_custom_select
@@ -148,7 +148,6 @@ get:
   - client_id = :id
   - unique_opt list bank_account_list
 ```
-
 
 
 Returning variable as response:
