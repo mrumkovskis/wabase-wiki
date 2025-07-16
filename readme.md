@@ -45,7 +45,7 @@ in the [Issues section](https://github.com/mrumkovskis/wabase/issues).
 
 ## What is wabase for?
 
-Wabase is designed as framework for building RESTful APIs. It is built on top of [akka-http](https://doc.akka.io/docs/akka-http/current/index.html) . 
+Wabase is designed as framework for building RESTful APIs. It is built on top of [pekko-http](https://pekko.apache.org). 
 Wabase is designed to be simple and easy to use, while still providing a lot of flexibility and power. 
 It is designed to be used in a microservice architecture, where each service is responsible for a specific domain.
 
@@ -53,28 +53,33 @@ It is designed to be used in a microservice architecture, where each service is 
 
 Following libraries are used in wabase to provide functionality commonly needed in web applications: 
 
+* pekko - for http server - https://pekko.apache.org
+* borer - for json serialization, deserialization - https://sirthias.github.io/borer/
+* quartz - for scheduling - https://www.quartz-scheduler.org/
+* flying saucer - for pdf generation - https://flyingsaucerproject.github.io/flyingsaucer/r8/guide/users-guide-R8.html
+* simple-java-mail - for email sending - https://www.simplejavamail.org/
 * jmustache - for templating - https://github.com/samskivert/jmustache
-* akka and akka-http - for http server - https://doc.akka.io/docs/akka-http/current/index.html
+* graalvm js - for javascript execution - https://www.graalvm.org/reference-manual/js/
+* json web token management (jwt) - https://github.com/jwt-scala/jwt-scala
+* cryptography support - https://github.com/wg/scrypt
 * hikariCP - for connection pooling - https://github.com/brettwooldridge/HikariCP
 * logback - for logging - http://logback.qos.ch/
 * commons-validator - for validation - https://commons.apache.org/proper/commons-validator/
 * commons-codec - for encoding - https://commons.apache.org/proper/commons-codec/
 * lambdaworks Scrypt - for password hashing - https://github.com/wg/scrypt
-* borer - for serialization - https://sirthias.github.io/borer/
-* quartz - for scheduling - https://www.quartz-scheduler.org/
-* openpdf - for pdf generation and parsing - https://librepdf.github.io/OpenPDF/  **TODO ???**
-* flying saucer - for pdf generation - https://flyingsaucerproject.github.io/flyingsaucer/r8/guide/users-guide-R8.html
-* simple-java-mail - for email sending - https://www.simplejavamail.org/
-* graalvm js - for javascript execution - https://www.graalvm.org/reference-manual/js/
-* scalatest - for testing - https://www.scalatest.org/
-* akka testkit - for testing - https://doc.akka.io/docs/akka/current/testing.html
+
 
 "In-house" products:
 
 * tresql - for SQL generation -
-* mojoz - for table metadata management -
-* querease - for database access - 
-* sbt-mojoz - for mojoz integration with sbt -
+* mojoz - for metadata definition -
+* querease - for view execution -
+* sbt-mojoz - for integration with sbt (like view compilation) -
+
+For testing:
+
+* scalatest - https://www.scalatest.org/
+* hsqldb - https://hsqldb.org
 
 # TODO:
 
